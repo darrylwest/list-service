@@ -1,0 +1,5 @@
+.DS_*
+bin/*
+*db/*
+*.out
+*.swp
