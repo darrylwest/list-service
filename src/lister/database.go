@@ -44,6 +44,10 @@ func (db Database) Open() error {
 
 	var err error
 	boltdb, err = bolt.Open(db.filename, 0600, &bolt.Options{Timeout: 1 * time.Second})
+	if err != nil {
+		log.Error("error opening database: %s %s", db.filename, err)
+		return err
+	}
 
 	boltdb.Update(func(tx *bolt.Tx) error {
 		log.Info("create the buckets: %s, %s, %s", workerBucket, queueBucket, jobBucket)

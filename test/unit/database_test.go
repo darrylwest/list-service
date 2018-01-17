@@ -10,7 +10,7 @@ package unit
 import (
 	"fmt"
 	"lister"
-	// "os"
+	"os"
 	"testing"
 	"time"
 
@@ -54,11 +54,9 @@ func copyRefDatabase(copy string) error {
 func TestDatabase(t *testing.T) {
 	g := Goblin(t)
 
-	/*
-		if err := copyRefDatabase(testdb); err != nil {
-			fmt.Printf("error copying ref database to %s", testdb)
-		}
-	*/
+	if err := copyRefDatabase(testdb); err != nil {
+		fmt.Printf("error copying ref database to %s", testdb)
+	}
 
 	g.Describe("Databse", func() {
 		log := lister.CreateLogger()
@@ -71,33 +69,33 @@ func TestDatabase(t *testing.T) {
 			g.Assert(fmt.Sprintf("%T", db)).Equal("lister.Database")
 		})
 
-		/*
-			g.It("should open the database", func() {
-				cfg := createTestConfig()
-				db, err := lister.NewDatabase(cfg)
-				defer db.Close()
+		g.It("should open the database", func() {
+			cfg := createTestConfig()
+			db, err := lister.NewDatabase(cfg)
 
-				err = db.Open()
-				g.Assert(err).Equal(nil)
-			})
+			err = db.Open()
+			defer db.Close()
+			g.Assert(err).Equal(nil)
+		})
 
-			g.It("should make a backup of a known database", func() {
-				cfg := createTestConfig()
-				db, _ := lister.NewDatabase(cfg)
-				db.Open()
-				defer db.Close()
+		g.It("should make a backup of a known database", func() {
+			cfg := createTestConfig()
+			db, err := lister.NewDatabase(cfg)
+			g.Assert(err).Equal(nil)
+			defer db.Close()
 
-				bufile := "../data/lister-ref-backup.db"
-				err := db.BackupTo(bufile)
-				g.Assert(err).Equal(nil)
+			db.Open()
 
-				// check to see that the database exists
-				info, err := os.Stat(bufile)
-				g.Assert(err).Equal(nil)
-				// fmt.Println(info)
-				g.Assert(info.Name()).Equal("lister-ref-backup.db")
-				g.Assert(info.Size() > 10000).IsTrue()
-			})
-		*/
+			bufile := "../data/lister-ref-backup.db"
+			err = db.BackupTo(bufile)
+			g.Assert(err).Equal(nil)
+
+			// check to see that the database exists
+			info, err := os.Stat(bufile)
+			g.Assert(err).Equal(nil)
+			// fmt.Println(info)
+			g.Assert(info.Name()).Equal("lister-ref-backup.db")
+			g.Assert(info.Size() > 10000).IsTrue()
+		})
 	})
 }
