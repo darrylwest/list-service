@@ -15,9 +15,9 @@ import (
 
 // Config the config structure
 type Config struct {
-	Port           int
-	LogLevel       int
-	DbFilename     string
+	Port       int
+	LogLevel   int
+	DbFilename string
 }
 
 // NewDefaultConfig default settings
@@ -57,9 +57,9 @@ func ParseArgs() *Config {
 	log.Info("%s Version: %s\n", path.Base(os.Args[0]), Version())
 
 	cfg := Config{
-		Port:           *port,
-		LogLevel:       *level,
-		DbFilename:     *dbfilename,
+		Port:       *port,
+		LogLevel:   *level,
+		DbFilename: *dbfilename,
 	}
 
 	log.SetLevel(cfg.LogLevel)
