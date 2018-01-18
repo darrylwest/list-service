@@ -14,24 +14,26 @@ import (
 )
 
 const (
-	ListStatusOpen   = "open"
-	ListStatusClosed = "closed"
+	ListStatusOpen     = "open"
+	ListStatusClosed   = "closed"
+	ListStatusArchived = "archived"
 )
 
 type List struct {
-	ID          string
-	DateCreated time.Time
-	LastUpdated time.Time
-	Version     int
-	Title       string
-	Category    string
-	Attributes  map[string]interface{}
-	Status      string
+	ID          string                 `json:"id"`
+	DateCreated time.Time              `json:"dateCreated"`
+	LastUpdated time.Time              `json:"lastUpdated"`
+	Version     int                    `json:"version"`
+	Title       string                 `json:"title"`
+	Category    string                 `json:"category"`
+	Attributes  map[string]interface{} `json:"attributes"`
+	Status      string                 `json:"status"`
 }
 
 // ToJSON
 func (list List) ToJSON() ([]byte, error) {
 	blob, err := json.Marshal(list)
+
 	return blob, err
 }
 

@@ -13,6 +13,9 @@ import (
 	"io/ioutil"
 	"lister"
 	"testing"
+	"time"
+
+	"github.com/darrylwest/go-unique/unique"
 
 	. "github.com/franela/goblin"
 )
@@ -34,6 +37,20 @@ func readListResult() (map[string]interface{}, error) {
 	return data, nil
 }
 
+func createListModel(title string) lister.List {
+	item := lister.List{}
+
+	item.ID = unique.CreateULID()
+	item.DateCreated = time.Now()
+	item.LastUpdated = time.Now()
+	item.Version = 1
+	item.Title = title
+
+	item.Status = lister.ListStatusOpen
+
+	return item
+}
+
 func TestListModel(t *testing.T) {
 	g := Goblin(t)
 
@@ -45,7 +62,17 @@ func TestListModel(t *testing.T) {
 			g.Assert(fmt.Sprintf("%T", model)).Equal("lister.List")
 		})
 
-		g.It("should serialize a list object to json")
+		g.It("should serialize a list object to json", func() {
+			model := createListModel("my subject")
+
+			g.Assert(fmt.Sprintf("%T", model)).Equal("lister.List")
+
+			json, err := model.ToJSON()
+			g.Assert(err).Equal(nil)
+
+			fmt.Printf("%s\n", json)
+
+		})
 
 		g.It("should unmarshall a list of items from json", func() {
 			data, err := readListResult()
