@@ -25,5 +25,7 @@ func TestListModel(t *testing.T) {
 			model := lister.List{}
 			g.Assert(fmt.Sprintf("%T", model)).Equal("lister.List")
 		})
+
+        g.It("should serialize a list object to json")
 	})
 }

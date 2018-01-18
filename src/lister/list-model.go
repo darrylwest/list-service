@@ -8,6 +8,7 @@
 package lister
 
 import (
+    "encoding/json"
 	"time"
 )
 
@@ -21,3 +22,10 @@ type List struct {
 	attributes  map[string]interface{}
 	status      string
 }
+
+// ToJSON
+func (list List) ToJSON() ([]byte, error) {
+    blob, err := json.Marshal(list)
+    return blob, err
+}
+
