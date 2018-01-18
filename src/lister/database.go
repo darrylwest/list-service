@@ -18,22 +18,29 @@ const (
 )
 
 var (
-	workerBucket = []byte("workers")
-	queueBucket  = []byte("queue")
-	jobBucket    = []byte("jobs")
+	listBucket = []byte("list")
+	boltdb     *bolt.DB
 )
+
+type DataAccessObject interface {
+	Open() error
+	Close() bool
+	BackupTo(string) error
+	Put(string, map[string]interface{}) (map[string]interface{}, error)
+	Get(string) (map[string]interface{}, error)
+	Remove(string) (map[string]interface{}, error)
+}
 
 // Database the primary database structure
 type Database struct {
 	filename string
 }
 
-var db = Database{}
-var boltdb *bolt.DB
-
 // NewDatabase creates and opens a new database connection
-func NewDatabase(cfg *Config) (Database, error) {
-	db.filename = cfg.DbFilename
+func NewDatabase(cfg *Config) (DataAccessObject, error) {
+	db := Database{
+		filename: cfg.DbFilename,
+	}
 
 	return db, nil
 }
@@ -50,20 +57,10 @@ func (db Database) Open() error {
 	}
 
 	boltdb.Update(func(tx *bolt.Tx) error {
-		log.Info("create the buckets: %s, %s, %s", workerBucket, queueBucket, jobBucket)
+		log.Info("create the list bucket...")
 
-		if _, err = tx.CreateBucketIfNotExists(workerBucket); err != nil {
-			log.Error("error creating %s: %s", workerBucket, err)
-			return err
-		}
-
-		if _, err = tx.CreateBucketIfNotExists(queueBucket); err != nil {
-			log.Error("error creating %s: %s", queueBucket, err)
-			return err
-		}
-
-		if _, err = tx.CreateBucketIfNotExists(jobBucket); err != nil {
-			log.Error("error creating %s: %s", jobBucket, err)
+		if _, err = tx.CreateBucketIfNotExists(listBucket); err != nil {
+			log.Error("error creating %s: %s", listBucket, err)
 			return err
 		}
 
@@ -74,13 +71,30 @@ func (db Database) Open() error {
 	return err
 }
 
+func (db Database) Put(key string, model map[string]interface{}) (map[string]interface{}, error) {
+	return model, nil
+}
+
+func (db Database) Get(key string) (map[string]interface{}, error) {
+	model := make(map[string]interface{})
+	return model, nil
+}
+
+func (db Database) Remove(key string) (map[string]interface{}, error) {
+	model := make(map[string]interface{})
+	return model, nil
+}
+
 // Close close the active database
-func (db Database) Close() {
+func (db Database) Close() bool {
 	if boltdb != nil {
 		log.Info("close active database...")
 		boltdb.Close()
 		boltdb = nil
+		return true
 	}
+
+	return false
 }
 
 // BackupTo backs up the current database to the specified file

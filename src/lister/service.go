@@ -32,18 +32,19 @@ func NewService(cfg *Config) (*Service, error) {
 func (svc Service) Start() error {
 	log.Info("start the hub service...")
 
-	if _, err := NewDatabase(svc.cfg); err != nil {
+	db, err := NewDatabase(svc.cfg)
+	if err != nil {
 		return err
 	}
 
-	if err := db.Open(); err != nil {
+	if err = db.Open(); err != nil {
 		return err
 	}
 
 	defer db.Close()
 
 	// start the listener
-	if err := svc.startServer(); err != nil {
+	if err = svc.startServer(); err != nil {
 		return err
 	}
 
