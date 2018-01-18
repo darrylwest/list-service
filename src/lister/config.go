@@ -26,7 +26,7 @@ func NewDefaultConfig() *Config {
 
 	cfg.Port = 9040
 	cfg.LogLevel = 2
-	cfg.DbFilename = "/data/list-service.db"
+	cfg.DbFilename = path.Join(os.Getenv("HOME"), "/database/list-service.db")
 
 	return cfg
 }

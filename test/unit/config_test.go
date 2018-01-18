@@ -8,7 +8,7 @@
 package unit
 
 import (
-	// "fmt"
+	"fmt"
 	"lister"
 	"testing"
 
@@ -28,10 +28,10 @@ func TestConfig(t *testing.T) {
 
 		g.It("should create a context struct with defaults set", func() {
 			cfg := lister.NewDefaultConfig()
-			g.Assert(cfg != nil).IsTrue()
+			g.Assert(fmt.Sprintf("%T", cfg)).Equal("*lister.Config")
 			g.Assert(cfg.Port).Equal(9040)
 			g.Assert(cfg.LogLevel).Equal(2)
-			g.Assert(cfg.DbFilename).Equal("/data/list-service.db")
+			g.Assert(cfg.DbFilename != "").IsTrue();
 		})
 
 		g.It("should parse an empty command line and return default config", func() {
