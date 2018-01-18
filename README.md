@@ -15,10 +15,10 @@ A generic list service used for todo, grocery, menus, etc.  The target design is
 
 ## Rest API
 
-* GET  /list/query/:params - return zero or more items from the list based on query parameters
+* GET  /list/query - return zero or more items from the list based on query parameters
 * GET  /list/:id   - return the list item by id
-* POST /list/:item - insert a new list item (this will also update)
-* PUT  /list/:item - update the list item (this will also insert new)
+* POST /list/      - insert a new list item; list data is posted as a json blob
+* PUT  /list/:id   - update the list item; list data is posted as a json blob
 * DEL  /list/:id   - remove the list item (or archive it)
 * PUT  /db/backup
 * GET  /status
