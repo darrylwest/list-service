@@ -50,15 +50,15 @@ func (hnd *Handlers) StatusHandler(w http.ResponseWriter, r *http.Request) {
 // DBBackupHandler creates a backup of the current database
 func (hnd *Handlers) DBBackupHandler(w http.ResponseWriter, r *http.Request) {
 	db := hnd.db
-	format := `{status":"%s","errors":"%s"}`
+	format := `{status":"%s","filename":"%s","errors":"%s"}`
 	var blob string
 
-	err := db.Backup()
+	filename, err := db.Backup()
 	if err != nil {
 		log.Error("db backup failed, target: err: %s", err.Error())
-		blob = fmt.Sprintf(format, "failed", err.Error())
+		blob = fmt.Sprintf(format, "failed", filename, err.Error())
 	} else {
-		blob = fmt.Sprintf(format, "ok", "zero")
+		blob = fmt.Sprintf(format, "ok", filename, "zero")
 	}
 
 	fmt.Fprintf(w, "%s\n\r", blob)

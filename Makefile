@@ -9,6 +9,7 @@ build:
 	go build -o bin/list-service src/main.go
 
 install-deps:
+	go get github.com/go-zoo/bone
 	go get github.com/golang/lint/golint
 	go get github.com/franela/goblin
 	go get github.com/darrylwest/go-unique/unique

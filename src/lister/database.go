@@ -29,7 +29,7 @@ type DataAccessObject interface {
 	Put(string, map[string]interface{}) (map[string]interface{}, error)
 	Get(string) (map[string]interface{}, error)
 	Remove(string) (map[string]interface{}, error)
-	Backup() error
+	Backup() (string, error)
 }
 
 // Database the primary database structure
@@ -98,16 +98,16 @@ func (db Database) Close() bool {
 	return false
 }
 
-// BackupTo backs up the current database to the specified file
-func (db Database) Backup() error {
+// Backup creates a backup file and backs up the current database; the backup filename is returned
+func (db Database) Backup() (string, error) {
 	bufile := strings.Replace(db.filename, ".db", "-backup.db", 1)
 	log.Info("backup current db: %s to %s", db.filename, bufile)
 	var err error
 
 	boltdb.View(func(tx *bolt.Tx) error {
-		err = tx.CopyFile(bufile, 0600)
+		err = tx.CopyFile(bufile, 0644)
 		return err
 	})
 
-	return err
+	return bufile, err
 }

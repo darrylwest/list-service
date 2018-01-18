@@ -35,7 +35,7 @@ func copyRefDatabase(copy string) error {
 	var db *bolt.DB
 	var err error
 
-	db, err = bolt.Open(refdb, 0600, &bolt.Options{ReadOnly: true, Timeout: 1 * time.Second})
+	db, err = bolt.Open(refdb, 0644, &bolt.Options{ReadOnly: true, Timeout: 1 * time.Second})
 
 	if err != nil {
 		return err
@@ -44,7 +44,7 @@ func copyRefDatabase(copy string) error {
 	defer db.Close()
 
 	db.View(func(tx *bolt.Tx) error {
-		err = tx.CopyFile(copy, 600)
+		err = tx.CopyFile(copy, 0644)
 		return err
 	})
 
@@ -86,15 +86,14 @@ func TestDatabase(t *testing.T) {
 
 			db.Open()
 
-			bufile := "../data/lister-ref-backup.db"
-			err = db.Backup()
+			bufile, err := db.Backup()
 			g.Assert(err).Equal(nil)
 
 			// check to see that the database exists
 			info, err := os.Stat(bufile)
 			g.Assert(err).Equal(nil)
-			// fmt.Println(info)
-			g.Assert(info.Name()).Equal("lister-ref-backup.db")
+			log.Info("%v", info)
+
 			g.Assert(info.Size() > 10000).IsTrue()
 		})
 	})
