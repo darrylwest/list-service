@@ -50,6 +50,13 @@ func (hnd *Handlers) StatusHandler(w http.ResponseWriter, r *http.Request) {
 // DBBackupHandler creates a backup of the current database
 func (hnd *Handlers) DBBackupHandler(w http.ResponseWriter, r *http.Request) {
 	db := hnd.db
+
+    if db == nil {
+		log.Error("db backup failed, database not assigned")
+        hnd.writeErrorResponse(w, "database not assigned")
+        return
+    }
+
 	format := `{status":"%s","filename":"%s","errors":"%s"}`
 	var blob string
 

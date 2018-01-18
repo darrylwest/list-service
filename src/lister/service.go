@@ -43,6 +43,9 @@ func (svc Service) Start() error {
 
 	defer db.Close()
 
+    // assign database to handler
+    svc.handlers.db = db
+
 	// start the listener
 	if err = svc.startServer(); err != nil {
 		return err
