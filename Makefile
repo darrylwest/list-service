@@ -26,7 +26,7 @@ lint:
 	@( golint src/... && golint test/... )
 
 run:
-	go run src/main.go
+	go run src/main.go --db-filename ~/database/list-service.db
 
 watch:
 	go-watcher --loglevel=4
