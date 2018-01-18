@@ -13,6 +13,32 @@
 
 A generic list service used for todo, grocery, menus, etc.  The target design is for the application to run inside a container with a single purpose, i.e., a single list type.  
 
+
+## Block Diagram
+
+The test controller includes an http REST interface to respond to end point requests.  Requests are first queued then submitted to test runners to run test suites in parallel capped by a maximum limit.  
+
+```
+                      ... Docker Container Environment ...
+
+                               Edge Proxy
+                              +------------+           List Service-1
+                              |            |         +---------------+
+                              |            |-------->| http/rest     |
+                              |            |<--------| list.db       |
+                              | http/rest  |         +---------------+     List Service-2
+                              |            |                             +---------------+
+                              |            |---------------------------->| http/rest     |
+                              |            |<----------------------------| list.db       |
+                              |            |                             |               |
+          +-----------+       |            |           List Service-3    +---------------+
+          |           |       |            |         +---------------+
+          | Sidecar   |<----->|            |-------->| http/rest     |
+          | Container |       |            |<--------| list.db       |
+          |           |       |            |         |               |
+          +-----------+       +------------+         +---------------+
+```
+
 ## Rest API
 
 * GET  /list/query/:params - return zero or more items from the list based on query parameters
