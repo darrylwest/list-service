@@ -28,6 +28,7 @@ type DataAccessObject interface {
 	Close() bool
 	Put(string, map[string]interface{}) (map[string]interface{}, error)
 	Get(string) (map[string]interface{}, error)
+	Query(map[string]interface{}) ([]map[string]interface{}, error)
 	Remove(string) (map[string]interface{}, error)
 	Backup() (string, error)
 }
@@ -70,6 +71,12 @@ func (db Database) Open() error {
 	})
 
 	return err
+}
+
+func (db Database) Query(params map[string]interface{}) ([]map[string]interface{}, error) {
+	list := make([]map[string]interface{}, 0)
+
+	return list, nil
 }
 
 func (db Database) Put(key string, model map[string]interface{}) (map[string]interface{}, error) {

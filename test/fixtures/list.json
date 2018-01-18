@@ -1,0 +1,26 @@
+{
+    "status":"ok",
+    "version":"1.0",
+    "items": [
+        {
+            "id":"01C45CNR35NZV2AH14XKJA97Q9",
+            "dateCreated":"2018-01-18T11:44:40.000Z",
+            "lastUpdated":"2018-01-18T11:44:40.000Z",
+            "version":1,
+            "title":"my list item entry",
+            "category":"",
+            "attributes":{},
+            "status":"open"
+        },
+        {
+            "id":"01C45CZ7GAR151HCG7HB92T64B",
+            "dateCreated":"2018-01-18T11:44:41.000Z",
+            "lastUpdated":"2018-01-18T11:44:41.000Z",
+            "version":1,
+            "title":"my second list item entry",
+            "category":"",
+            "attributes":{},
+            "status":"open"
+        }
+    ]
+}

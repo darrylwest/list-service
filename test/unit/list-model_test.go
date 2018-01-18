@@ -8,12 +8,31 @@
 package unit
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"lister"
 	"testing"
 
 	. "github.com/franela/goblin"
 )
+
+func readListResult() (map[string]interface{}, error) {
+	var data map[string]interface{}
+	filename := "../fixtures/list.json"
+
+	bytes, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return data, err
+	}
+
+	err = json.Unmarshal(bytes, &data)
+	if err != nil {
+		return data, nil
+	}
+
+	return data, nil
+}
 
 func TestListModel(t *testing.T) {
 	g := Goblin(t)
@@ -26,6 +45,32 @@ func TestListModel(t *testing.T) {
 			g.Assert(fmt.Sprintf("%T", model)).Equal("lister.List")
 		})
 
-        g.It("should serialize a list object to json")
+		g.It("should serialize a list object to json")
+
+		g.It("should unmarshall a list of items from json", func() {
+			data, err := readListResult()
+			g.Assert(err).Equal(nil)
+
+			rawItems, ok := data["items"].([]interface{})
+			g.Assert(ok).IsTrue()
+
+			for _, raw := range rawItems {
+				list, err := lister.ListFromJSON(raw)
+				g.Assert(err).Equal(nil)
+				g.Assert(len(list.ID)).Equal(26)
+				g.Assert(list.DateCreated.Year()).Equal(2018)
+				g.Assert(list.LastUpdated.Year()).Equal(2018)
+				g.Assert(list.Version).Equal(1)
+				g.Assert(len(list.Title) > 5).IsTrue()
+				g.Assert(list.Category).Equal("")
+
+				g.Assert(list.Status).Equal(lister.ListStatusOpen)
+
+				g.Assert(len(list.Attributes)).Equal(0)
+				// fmt.Println(list.ID, list.Attributes)
+			}
+
+			// g.Assert(len(items)).Equal(2)
+		})
 	})
 }

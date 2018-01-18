@@ -34,8 +34,33 @@ func NewHandlers(cfg *Config) *Handlers {
 }
 
 // HomeHandler return the home page
-func (hnd *Handlers) HomeHandler(w http.ResponseWriter, r *http.Request) {
+func (hnd Handlers) HomeHandler(w http.ResponseWriter, r *http.Request) {
 	hnd.StatusHandler(w, r)
+}
+
+// QueryHandler - queries and returns list items
+func (hnd Handlers) QueryHandler(w http.ResponseWriter, r *http.Request) {
+	hnd.writeErrorResponse(w, "not implemented yet...")
+}
+
+// FindByIDHandler - queries and returns list items
+func (hnd Handlers) FindByIDHandler(w http.ResponseWriter, r *http.Request) {
+	hnd.writeErrorResponse(w, "not implemented yet...")
+}
+
+// UpdateHandler - updates and existing list item
+func (hnd Handlers) UpdateHandler(w http.ResponseWriter, r *http.Request) {
+	hnd.writeErrorResponse(w, "not implemented yet...")
+}
+
+// InsertHandler - inserts a new list item
+func (hnd Handlers) InsertHandler(w http.ResponseWriter, r *http.Request) {
+	hnd.writeErrorResponse(w, "not implemented yet...")
+}
+
+// DeleteHandler - archives a list item
+func (hnd Handlers) DeleteHandler(w http.ResponseWriter, r *http.Request) {
+	hnd.writeErrorResponse(w, "not implemented yet...")
 }
 
 // StatusHandler returns the service status
@@ -48,14 +73,14 @@ func (hnd *Handlers) StatusHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // DBBackupHandler creates a backup of the current database
-func (hnd *Handlers) DBBackupHandler(w http.ResponseWriter, r *http.Request) {
+func (hnd Handlers) DBBackupHandler(w http.ResponseWriter, r *http.Request) {
 	db := hnd.db
 
-    if db == nil {
+	if db == nil {
 		log.Error("db backup failed, database not assigned")
-        hnd.writeErrorResponse(w, "database not assigned")
-        return
-    }
+		hnd.writeErrorResponse(w, "database not assigned")
+		return
+	}
 
 	format := `{status":"%s","filename":"%s","errors":"%s"}`
 	var blob string
@@ -72,7 +97,7 @@ func (hnd *Handlers) DBBackupHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetLogLevel returns the current log level 0..5
-func (hnd *Handlers) GetLogLevel(w http.ResponseWriter, r *http.Request) {
+func (hnd Handlers) GetLogLevel(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "{\"%s\":\"%d\"}\n\r", "loglevel", log.GetLevel())
 }
 
@@ -114,7 +139,7 @@ func (hnd Handlers) CreateResponseWrapper(status string) map[string]interface{} 
 	return wrapper
 }
 
-func (hnd *Handlers) writeJSONBlob(w http.ResponseWriter, wrapper map[string]interface{}) {
+func (hnd Handlers) writeJSONBlob(w http.ResponseWriter, wrapper map[string]interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	blob, err := json.Marshal(wrapper)
 	if err != nil {

@@ -43,8 +43,8 @@ func (svc Service) Start() error {
 
 	defer db.Close()
 
-    // assign database to handler
-    svc.handlers.db = db
+	// assign database to handler
+	svc.handlers.db = db
 
 	// start the listener
 	if err = svc.startServer(); err != nil {
@@ -68,6 +68,11 @@ func (svc Service) CreateRoutes() *bone.Mux {
 	router.PutFunc("/db/backup", hnd.DBBackupHandler)
 
 	// ok, now the list API...
+	router.GetFunc("/list/query", hnd.QueryHandler)
+	router.GetFunc("/list/:id", hnd.FindByIDHandler)
+	router.PostFunc("/list/", hnd.InsertHandler)
+	router.PutFunc("/list/:id", hnd.UpdateHandler)
+	router.DeleteFunc("/list/:id", hnd.DeleteHandler)
 
 	return router
 }
