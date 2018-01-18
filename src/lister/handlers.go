@@ -12,7 +12,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	// "strings"
 	"time"
 
 	"github.com/go-zoo/bone"
@@ -23,6 +22,7 @@ var httpClientRequestTimeout = time.Duration(10 * time.Second)
 // Handlers the handlers struct for configuration
 type Handlers struct {
 	cfg *Config
+	db  DataAccessObject
 }
 
 // NewHandlers create the new handlers object
@@ -49,21 +49,19 @@ func (hnd *Handlers) StatusHandler(w http.ResponseWriter, r *http.Request) {
 
 // DBBackupHandler creates a backup of the current database
 func (hnd *Handlers) DBBackupHandler(w http.ResponseWriter, r *http.Request) {
-	/*
-		format := `{"backup-file":"%s","status":"%s","errors":"%s"}`
-		file := strings.Replace(db.filename, ".db", "-backup.db", 1)
-		var blob string
+	db := hnd.db
+	format := `{status":"%s","errors":"%s"}`
+	var blob string
 
-		err := db.BackupTo(file)
-		if err != nil {
-			log.Error("db backup failed, target: %s, err: %s", file, err.Error())
-			blob = fmt.Sprintf(format, file, "failed", err.Error())
-		} else {
-			blob = fmt.Sprintf(format, file, "ok", "zero")
-		}
+	err := db.Backup()
+	if err != nil {
+		log.Error("db backup failed, target: err: %s", err.Error())
+		blob = fmt.Sprintf(format, "failed", err.Error())
+	} else {
+		blob = fmt.Sprintf(format, "ok", "zero")
+	}
 
-		fmt.Fprintf(w, "%s\n\r", blob)
-	*/
+	fmt.Fprintf(w, "%s\n\r", blob)
 }
 
 // GetLogLevel returns the current log level 0..5

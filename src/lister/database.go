@@ -8,6 +8,7 @@
 package lister
 
 import (
+	"strings"
 	"time"
 
 	"github.com/boltdb/bolt"
@@ -25,10 +26,10 @@ var (
 type DataAccessObject interface {
 	Open() error
 	Close() bool
-	BackupTo(string) error
 	Put(string, map[string]interface{}) (map[string]interface{}, error)
 	Get(string) (map[string]interface{}, error)
 	Remove(string) (map[string]interface{}, error)
+	Backup() error
 }
 
 // Database the primary database structure
@@ -98,7 +99,8 @@ func (db Database) Close() bool {
 }
 
 // BackupTo backs up the current database to the specified file
-func (db Database) BackupTo(bufile string) error {
+func (db Database) Backup() error {
+	bufile := strings.Replace(db.filename, ".db", "-backup.db", 1)
 	log.Info("backup current db: %s to %s", db.filename, bufile)
 	var err error
 

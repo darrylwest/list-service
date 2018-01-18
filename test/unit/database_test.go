@@ -87,7 +87,7 @@ func TestDatabase(t *testing.T) {
 			db.Open()
 
 			bufile := "../data/lister-ref-backup.db"
-			err = db.BackupTo(bufile)
+			err = db.Backup()
 			g.Assert(err).Equal(nil)
 
 			// check to see that the database exists
