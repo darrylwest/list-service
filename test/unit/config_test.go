@@ -29,7 +29,7 @@ func TestConfig(t *testing.T) {
 		g.It("should create a context struct with defaults set", func() {
 			cfg := lister.NewDefaultConfig()
 			g.Assert(fmt.Sprintf("%T", cfg)).Equal("*lister.Config")
-			g.Assert(cfg.Port).Equal(9040)
+			g.Assert(cfg.Port).Equal(8080)
 			g.Assert(cfg.LogLevel).Equal(2)
 			g.Assert(cfg.DbFilename != "").IsTrue()
 		})
