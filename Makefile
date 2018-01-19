@@ -35,5 +35,8 @@ edit:
 	make format
 	vi -O3 src/*/*.go test/*/*.go src/*.go
 
-.PHONY: format lint test qtest watch run test-hub test-worker
+docker-dev:
+	docker run -it --name lister-dev --publish 9040:8080 --volume $(PWD):/opt ebay/debian-gcc:latest
+
+.PHONY: format lint test qtest watch run test-hub test-worker docker-dev
 

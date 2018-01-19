@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"lister"
-    "strings"
+	"strings"
 	"testing"
 	"time"
 
@@ -70,17 +70,17 @@ func TestListModel(t *testing.T) {
 
 			blob, err := model.ToJSON()
 			g.Assert(err).Equal(nil)
-            g.Assert(fmt.Sprintf("%T", blob)).Equal("[]uint8")
+			g.Assert(fmt.Sprintf("%T", blob)).Equal("[]uint8")
 
-            json := fmt.Sprintf("%s", blob)
+			json := fmt.Sprintf("%s", blob)
 
-            g.Assert(strings.Contains(json, "id")).IsTrue()
-            g.Assert(strings.Contains(json, "dateCreated")).IsTrue()
-            g.Assert(strings.Contains(json, "lastUpdated")).IsTrue()
-            g.Assert(strings.Contains(json, "version")).IsTrue()
-            g.Assert(strings.Contains(json, "title")).IsTrue()
-            g.Assert(strings.Contains(json, "category")).IsTrue()
-            g.Assert(strings.Contains(json, "status")).IsTrue()
+			g.Assert(strings.Contains(json, "id")).IsTrue()
+			g.Assert(strings.Contains(json, "dateCreated")).IsTrue()
+			g.Assert(strings.Contains(json, "lastUpdated")).IsTrue()
+			g.Assert(strings.Contains(json, "version")).IsTrue()
+			g.Assert(strings.Contains(json, "title")).IsTrue()
+			g.Assert(strings.Contains(json, "category")).IsTrue()
+			g.Assert(strings.Contains(json, "status")).IsTrue()
 		})
 
 		g.It("should unmarshall a list of items from json", func() {
