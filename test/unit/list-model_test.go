@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"lister"
+    "strings"
 	"testing"
 	"time"
 
@@ -67,11 +68,19 @@ func TestListModel(t *testing.T) {
 
 			g.Assert(fmt.Sprintf("%T", model)).Equal("lister.List")
 
-			json, err := model.ToJSON()
+			blob, err := model.ToJSON()
 			g.Assert(err).Equal(nil)
+            g.Assert(fmt.Sprintf("%T", blob)).Equal("[]uint8")
 
-			fmt.Printf("%s\n", json)
+            json := fmt.Sprintf("%s", blob)
 
+            g.Assert(strings.Contains(json, "id")).IsTrue()
+            g.Assert(strings.Contains(json, "dateCreated")).IsTrue()
+            g.Assert(strings.Contains(json, "lastUpdated")).IsTrue()
+            g.Assert(strings.Contains(json, "version")).IsTrue()
+            g.Assert(strings.Contains(json, "title")).IsTrue()
+            g.Assert(strings.Contains(json, "category")).IsTrue()
+            g.Assert(strings.Contains(json, "status")).IsTrue()
 		})
 
 		g.It("should unmarshall a list of items from json", func() {
@@ -83,10 +92,12 @@ func TestListModel(t *testing.T) {
 
 			for _, raw := range rawItems {
 				list, err := lister.ListFromJSON(raw)
+
 				g.Assert(err).Equal(nil)
 				g.Assert(len(list.ID)).Equal(26)
 				g.Assert(list.DateCreated.Year()).Equal(2018)
 				g.Assert(list.LastUpdated.Year()).Equal(2018)
+				g.Assert(list.LastUpdated.Minute()).Equal(list.DateCreated.Minute())
 				g.Assert(list.Version).Equal(1)
 				g.Assert(len(list.Title) > 5).IsTrue()
 				g.Assert(list.Category).Equal("")
@@ -94,10 +105,8 @@ func TestListModel(t *testing.T) {
 				g.Assert(list.Status).Equal(lister.ListStatusOpen)
 
 				g.Assert(len(list.Attributes)).Equal(0)
-				// fmt.Println(list.ID, list.Attributes)
 			}
 
-			// g.Assert(len(items)).Equal(2)
 		})
 	})
 }
