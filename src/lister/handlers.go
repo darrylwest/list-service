@@ -55,7 +55,29 @@ func (hnd Handlers) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 // InsertHandler - inserts a new list item
 func (hnd Handlers) InsertHandler(w http.ResponseWriter, r *http.Request) {
-	hnd.writeErrorResponse(w, "not implemented yet...")
+    if r.Body == nil {
+        http.Error(w, "Missing request body", 400)
+        return
+    }
+
+    var data map[string]interface{}
+
+    err := json.NewDecoder(r.Body).Decode(&data)
+    if err != nil {
+        http.Error(w, "Request body has errors", 400)
+        return
+    }
+
+    list, err := NewListFromJSON(data)
+    if err != nil {
+        http.Error(w, "Post data parse failed: " + err.Error(), 400)
+        return
+    }
+
+    log.Info("post new list item %v", list)
+
+    blob, _ := list.ToJSON()
+	fmt.Fprintf(w, "%s\n\r", blob)
 }
 
 // DeleteHandler - archives a list item

@@ -70,7 +70,7 @@ func (svc Service) CreateRoutes() *bone.Mux {
 	// ok, now the list API...
 	router.GetFunc("/list/query", hnd.QueryHandler)
 	router.GetFunc("/list/:id", hnd.FindByIDHandler)
-	router.PostFunc("/list/", hnd.InsertHandler)
+	router.PostFunc("/list", hnd.InsertHandler)
 	router.PutFunc("/list/:id", hnd.UpdateHandler)
 	router.DeleteFunc("/list/:id", hnd.DeleteHandler)
 

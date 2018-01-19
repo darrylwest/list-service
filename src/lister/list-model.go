@@ -37,6 +37,29 @@ func (list List) ToJSON() ([]byte, error) {
 	return blob, err
 }
 
+// NewListFromJSON create a new list item from the partial json blob
+func NewListFromJSON(raw interface{}) (*List, error) {
+
+	hash, ok := raw.(map[string]interface{})
+    if !ok {
+		return nil, fmt.Errorf("could not convert raw interface to hash map")
+    }
+
+	list := new(List)
+
+	if list.Title, ok = hash["title"].(string); !ok {
+		return nil, fmt.Errorf("could not convert to list model: missing title")
+	}
+
+	list.Category = hash["category"].(string)
+
+	if list.Status, ok = hash["status"].(string); !ok {
+		list.Status = ListStatusOpen
+	}
+
+    return list, nil
+}
+
 // ListFromJSON
 func ListFromJSON(raw interface{}) (*List, error) {
 	var err error
