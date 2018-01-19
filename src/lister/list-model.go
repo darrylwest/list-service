@@ -11,6 +11,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/darrylwest/go-unique/unique"
 )
 
 const (
@@ -51,11 +53,16 @@ func NewListFromJSON(raw interface{}) (*List, error) {
 		return nil, fmt.Errorf("could not convert to list model: missing title")
 	}
 
-	list.Category = hash["category"].(string)
+	list.Category, ok = hash["category"].(string)
 
 	if list.Status, ok = hash["status"].(string); !ok {
 		list.Status = ListStatusOpen
 	}
+
+    list.ID = unique.CreateULID()
+    list.DateCreated = time.Now()
+    list.LastUpdated = time.Now()
+    list.Version = 1
 
     return list, nil
 }
@@ -89,7 +96,7 @@ func ListFromJSON(raw interface{}) (*List, error) {
 		return nil, fmt.Errorf("could not convert to list model: missing title")
 	}
 
-	list.Category = hash["category"].(string)
+	list.Category, ok = hash["category"].(string)
 
 	if list.Status, ok = hash["status"].(string); !ok {
 		return nil, fmt.Errorf("could not convert to list model: missing status")
