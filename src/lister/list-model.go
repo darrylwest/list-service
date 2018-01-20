@@ -21,7 +21,7 @@ const (
 	ListStatusArchived = "archived"
 )
 
-type List struct {
+type ListItem struct {
 	ID          string                 `json:"id"`
 	DateCreated time.Time              `json:"dateCreated"`
 	LastUpdated time.Time              `json:"lastUpdated"`
@@ -33,21 +33,32 @@ type List struct {
 }
 
 // ToJSON
-func (list List) ToJSON() ([]byte, error) {
+func (list ListItem) ToJSON() ([]byte, error) {
 	blob, err := json.Marshal(list)
 
 	return blob, err
 }
 
-// NewListFromJSON create a new list item from the partial json blob
-func NewListFromJSON(raw interface{}) (*List, error) {
+// ParseListItemFromJSON parse the blob and return a list item
+func ParseListItemFromJSON(blob []byte) (*ListItem, error) {
+    var hash map[string]interface{}
+    err := json.Unmarshal(blob, &hash)
+    if err != nil {
+        return nil, err
+    }
+
+    return ListItemFromJSON(hash)
+}
+
+// NewListItemFromJSON create a new list item from the partial json blob
+func NewListItemFromJSON(raw interface{}) (*ListItem, error) {
 
 	hash, ok := raw.(map[string]interface{})
     if !ok {
 		return nil, fmt.Errorf("could not convert raw interface to hash map")
     }
 
-	list := new(List)
+	list := new(ListItem)
 
 	if list.Title, ok = hash["title"].(string); !ok {
 		return nil, fmt.Errorf("could not convert to list model: missing title")
@@ -67,15 +78,15 @@ func NewListFromJSON(raw interface{}) (*List, error) {
     return list, nil
 }
 
-// ListFromJSON
-func ListFromJSON(raw interface{}) (*List, error) {
+// ListItemFromJSON
+func ListItemFromJSON(raw interface{}) (*ListItem, error) {
 	var err error
 	hash, ok := raw.(map[string]interface{})
 	if !ok {
 		return nil, fmt.Errorf("could not convert raw interface to hash map")
 	}
 
-	list := new(List)
+	list := new(ListItem)
 	if list.ID, ok = hash["id"].(string); !ok {
 		return nil, fmt.Errorf("could not convert to list model: missing id")
 	}

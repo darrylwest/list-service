@@ -2,7 +2,7 @@
 // database tests
 //
 // @author darryl.west@ebay.com
-// @created 2017-12-25 12:57:59
+// @created 2018-01-19 12:57:59
 //
 
 package unit
@@ -77,6 +77,43 @@ func TestDatabase(t *testing.T) {
 			defer db.Close()
 			g.Assert(err).Equal(nil)
 		})
+
+        g.It("should insert a new list blob and successfully read it back", func() {
+            hash := make(map[string]interface{})
+            hash["title"] = "My Test Title"
+            hash["category"] = "TopLevel"
+            
+            list, err := lister.NewListItemFromJSON(hash)
+            list.Version++
+            g.Assert(err).Equal(nil)
+            g.Assert(len(list.ID)).Equal(26)
+
+            blob, err := list.ToJSON()
+            g.Assert(err).Equal(nil)
+
+			cfg := createTestConfig()
+			db, err := lister.NewDatabase(cfg)
+
+			err = db.Open()
+			defer db.Close()
+
+            err = db.Put(list.ID, blob)
+            g.Assert(err).Equal(nil)
+
+            // now read back the blob
+            blob, err = db.Get(list.ID)
+            g.Assert(err).Equal(nil)
+
+            item, err := lister.ParseListItemFromJSON(blob)
+            g.Assert(err).Equal(nil)
+            g.Assert(item.ID).Equal(list.ID)
+        })
+
+        g.It("should update and existing list blob")
+
+        g.It("should remove an existing list blob")
+
+        g.It("should query and return a list of items")
 
 		g.It("should make a backup of a known database", func() {
 			cfg := createTestConfig()

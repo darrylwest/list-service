@@ -8,6 +8,7 @@
 package lister
 
 import (
+    "fmt"
 	"strings"
 	"time"
 
@@ -26,8 +27,8 @@ var (
 type DataAccessObject interface {
 	Open() error
 	Close() bool
-	Put(string, map[string]interface{}) (map[string]interface{}, error)
-	Get(string) (map[string]interface{}, error)
+	Put(string, []byte) error
+	Get(string) ([]byte, error)
 	Query(map[string]interface{}) ([]map[string]interface{}, error)
 	Remove(string) (map[string]interface{}, error)
 	Backup() (string, error)
@@ -73,24 +74,50 @@ func (db Database) Open() error {
 	return err
 }
 
-func (db Database) Query(params map[string]interface{}) ([]map[string]interface{}, error) {
-	list := make([]map[string]interface{}, 0)
+// Put update database with blob 
+func (db Database) Put(key string, blob []byte)  error  {
+    if len(key) < 26 {
+        return fmt.Errorf("invalid key: %s", key)
+    }
 
-	return list, nil
+    log.Info("put %s", blob)
+
+    err := boltdb.Update(func(tx *bolt.Tx) error {
+        b := tx.Bucket(listBucket)
+        err := b.Put([]byte(key), blob)
+
+        return err
+    })
+
+	return err
 }
 
-func (db Database) Put(key string, model map[string]interface{}) (map[string]interface{}, error) {
-	return model, nil
-}
+func (db Database) Get(key string) ([]byte, error) {
+    var blob []byte
 
-func (db Database) Get(key string) (map[string]interface{}, error) {
-	model := make(map[string]interface{})
-	return model, nil
+    err := boltdb.View(func(tx *bolt.Tx) error {
+        b := tx.Bucket(listBucket)
+        blob = b.Get([]byte(key))
+        if len(blob) == 0 {
+            return fmt.Errorf(DoesNotExistForID, "listitem", key)
+        }
+
+        return nil
+    })
+
+    log.Info("put %s", blob)
+	return blob, err
 }
 
 func (db Database) Remove(key string) (map[string]interface{}, error) {
 	model := make(map[string]interface{})
 	return model, nil
+}
+
+func (db Database) Query(params map[string]interface{}) ([]map[string]interface{}, error) {
+	list := make([]map[string]interface{}, 0)
+
+	return list, nil
 }
 
 // Close close the active database

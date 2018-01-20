@@ -21,7 +21,7 @@ import (
 	. "github.com/franela/goblin"
 )
 
-func readListResult() (map[string]interface{}, error) {
+func readListItemResults() (map[string]interface{}, error) {
 	var data map[string]interface{}
 	filename := "../fixtures/list.json"
 
@@ -38,8 +38,8 @@ func readListResult() (map[string]interface{}, error) {
 	return data, nil
 }
 
-func createListModel(title string) lister.List {
-	item := lister.List{}
+func createListItemModel(title string) lister.ListItem {
+	item := lister.ListItem{}
 
 	item.ID = unique.CreateULID()
 	item.DateCreated = time.Now()
@@ -55,18 +55,18 @@ func createListModel(title string) lister.List {
 func TestListModel(t *testing.T) {
 	g := Goblin(t)
 
-	g.Describe("ListModel", func() {
+	g.Describe("ListItemModel", func() {
 		lister.CreateLogger()
 
 		g.It("should create a list struct", func() {
-			model := lister.List{}
-			g.Assert(fmt.Sprintf("%T", model)).Equal("lister.List")
+			model := lister.ListItem{}
+			g.Assert(fmt.Sprintf("%T", model)).Equal("lister.ListItem")
 		})
 
 		g.It("should serialize a list object to json", func() {
-			model := createListModel("my subject")
+			model := createListItemModel("my subject")
 
-			g.Assert(fmt.Sprintf("%T", model)).Equal("lister.List")
+			g.Assert(fmt.Sprintf("%T", model)).Equal("lister.ListItem")
 
 			blob, err := model.ToJSON()
 			g.Assert(err).Equal(nil)
@@ -89,7 +89,7 @@ func TestListModel(t *testing.T) {
             hash := make(map[string]interface{})
             hash["title"] = "My Test Title"
             
-            item, err := lister.NewListFromJSON(hash)
+            item, err := lister.NewListItemFromJSON(hash)
             g.Assert(err).Equal(nil)
 
             g.Assert(len(item.ID)).Equal(26)
@@ -102,14 +102,14 @@ func TestListModel(t *testing.T) {
         })
 
 		g.It("should unmarshall a list of items from json", func() {
-			data, err := readListResult()
+			data, err := readListItemResults()
 			g.Assert(err).Equal(nil)
 
 			rawItems, ok := data["items"].([]interface{})
 			g.Assert(ok).IsTrue()
 
 			for _, raw := range rawItems {
-				list, err := lister.ListFromJSON(raw)
+				list, err := lister.ListItemFromJSON(raw)
 
 				g.Assert(err).Equal(nil)
 				g.Assert(len(list.ID)).Equal(26)

@@ -68,7 +68,7 @@ func (hnd Handlers) InsertHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    list, err := NewListFromJSON(data)
+    list, err := NewListItemFromJSON(data)
     if err != nil {
         http.Error(w, "Post data parse failed: " + err.Error(), 400)
         return
