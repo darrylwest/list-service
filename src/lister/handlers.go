@@ -55,12 +55,26 @@ func (hnd Handlers) QueryHandler(w http.ResponseWriter, r *http.Request) {
 
 // FindByIDHandler - queries and returns list items
 func (hnd Handlers) FindByIDHandler(w http.ResponseWriter, r *http.Request) {
-	hnd.writeErrorResponse(w, "not implemented yet...")
+    id := bone.GetValue(r, "id")
+
+    item, err := GetListItem(hnd.db, id)
+    if err != nil {
+        http.Error(w, "Missing request body", 400)
+        return
+    }
+
+    wrapper := hnd.CreateResponseWrapper("ok")
+    wrapper["item"] = item
+
+	hnd.writeJSONBlob(w, wrapper)
 }
 
 // UpdateHandler - updates and existing list item
 func (hnd Handlers) UpdateHandler(w http.ResponseWriter, r *http.Request) {
-	hnd.writeErrorResponse(w, "not implemented yet...")
+    wrapper := hnd.CreateResponseWrapper("ok")
+    // wrapper["item"] = item
+
+	hnd.writeJSONBlob(w, wrapper)
 }
 
 // InsertHandler - inserts a new list item
@@ -78,25 +92,22 @@ func (hnd Handlers) InsertHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    list, err := NewListItemFromJSON(data)
+    item, err := NewListItemFromJSON(data)
     if err != nil {
         http.Error(w, "Post data parse failed: " + err.Error(), 400)
         return
     }
 
-    list, err = list.Save(hnd.db)
+    item, err = item.Save(hnd.db)
     if err != nil {
         http.Error(w, "Save data failed: " + err.Error(), 400)
         return
     }
 
-    blob, err := list.ToJSON()
-    if err != nil {
-        http.Error(w, "Post save data failed: " + err.Error(), 400)
-        return
-    }
+    wrapper := hnd.CreateResponseWrapper("ok")
+    wrapper["item"] = item
 
-	fmt.Fprintf(w, "%s\n\r", blob)
+	hnd.writeJSONBlob(w, wrapper)
 }
 
 // DeleteHandler - archives a list item

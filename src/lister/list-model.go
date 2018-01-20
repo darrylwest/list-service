@@ -74,6 +74,16 @@ func QueryListItems(db DataAccessObject, params map[string]interface{}) ([]*List
     return items, nil
 }
 
+// GetListItem fetch and return the list item by id
+func GetListItem(db DataAccessObject, id string) (*ListItem, error) {
+    blob, err := db.Get(id)
+    if err != nil {
+        return nil, err
+    }
+
+    return ParseListItemFromJSON(blob)
+}
+
 // ToJSON convert the struct to a json blob
 func (list ListItem) ToJSON() ([]byte, error) {
 	blob, err := json.Marshal(list)
