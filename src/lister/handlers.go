@@ -71,8 +71,31 @@ func (hnd Handlers) FindByIDHandler(w http.ResponseWriter, r *http.Request) {
 
 // UpdateHandler - updates and existing list item
 func (hnd Handlers) UpdateHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Body == nil {
+        http.Error(w, "Missing request body", 400)
+        return
+    }
+
+    var data map[string]interface{}
+
+    err := json.NewDecoder(r.Body).Decode(&data)
+    if err != nil {
+        http.Error(w, "Request body has errors", 400)
+        return
+    }
+
+    item, err := ListItemFromJSON(data)
+
+    // todo -- fetch and compare to version...
+
+    item, err = item.Save(hnd.db)
+    if err != nil {
+        http.Error(w, "Request body has errors", 400)
+        return
+    }
+
     wrapper := hnd.CreateResponseWrapper("ok")
-    // wrapper["item"] = item
+    wrapper["item"] = item
 
 	hnd.writeJSONBlob(w, wrapper)
 }
