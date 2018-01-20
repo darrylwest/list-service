@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/boltdb/bolt"
+	"github.com/darrylwest/go-unique/unique"
 
 	. "github.com/franela/goblin"
 )
@@ -59,6 +60,9 @@ func TestDatabase(t *testing.T) {
 	}
 
 	g.Describe("Databse", func() {
+        refid := unique.CreateULID()
+        refTitle := "My Test Title"
+
 		log := lister.CreateLogger()
 		log.SetLevel(4)
 
@@ -80,7 +84,7 @@ func TestDatabase(t *testing.T) {
 
         g.It("should insert a new list blob and successfully read it back", func() {
             hash := make(map[string]interface{})
-            hash["title"] = "My Test Title"
+            hash["title"] = refTitle
             hash["category"] = "TopLevel"
             
             list, err := lister.NewListItemFromJSON(hash)
@@ -88,32 +92,68 @@ func TestDatabase(t *testing.T) {
             g.Assert(err).Equal(nil)
             g.Assert(len(list.ID)).Equal(26)
 
+            // now assign the reference
+            list.ID = refid
+
             blob, err := list.ToJSON()
             g.Assert(err).Equal(nil)
 
 			cfg := createTestConfig()
 			db, err := lister.NewDatabase(cfg)
 
-			err = db.Open()
+			db.Open()
 			defer db.Close()
 
             err = db.Put(list.ID, blob)
             g.Assert(err).Equal(nil)
 
             // now read back the blob
-            blob, err = db.Get(list.ID)
+            blob, err = db.Get(refid)
             g.Assert(err).Equal(nil)
 
             item, err := lister.ParseListItemFromJSON(blob)
             g.Assert(err).Equal(nil)
             g.Assert(item.ID).Equal(list.ID)
+            g.Assert(item.Title).Equal(refTitle)
         })
 
-        g.It("should update and existing list blob")
+        g.It("should update and existing list blob", func() {
+			cfg := createTestConfig()
+			db, err := lister.NewDatabase(cfg)
+            g.Assert(err).Equal(nil)
 
-        g.It("should remove an existing list blob")
+			db.Open()
+			defer db.Close()
+
+            blob, err := db.Get(refid)
+            g.Assert(err).Equal(nil)
+            ref, err := lister.ParseListItemFromJSON(blob)
+            g.Assert(err).Equal(nil)
+            g.Assert(ref.ID).Equal(refid)
+            g.Assert(ref.Title).Equal(refTitle)
+
+            ref.Title = "My alternate title"
+            ref.LastUpdated = time.Now()
+            ref.Version++
+
+            blob, err = ref.ToJSON()
+            g.Assert(err).Equal(nil)
+            err = db.Put(ref.ID, blob)
+            g.Assert(err).Equal(nil)
+
+            blob, err = db.Get(ref.ID)
+            g.Assert(err).Equal(nil)
+
+            item, err := lister.ParseListItemFromJSON(blob)
+            g.Assert(err).Equal(nil)
+            g.Assert(item.ID).Equal(ref.ID)
+            g.Assert(item.Title).Equal(ref.Title)
+        })
+
 
         g.It("should query and return a list of items")
+
+        g.It("should remove an existing list blob")
 
 		g.It("should make a backup of a known database", func() {
 			cfg := createTestConfig()
