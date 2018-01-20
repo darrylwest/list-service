@@ -41,20 +41,10 @@ func (hnd Handlers) HomeHandler(w http.ResponseWriter, r *http.Request) {
 // QueryHandler - queries and returns list items
 func (hnd Handlers) QueryHandler(w http.ResponseWriter, r *http.Request) {
     params := make(map[string]interface{})
-    blob, err := hnd.db.Query(params)
+    items, err := QueryListItems(hnd.db, params)
     if err != nil {
         http.Error(w, "Query error", 400)
         return
-    }
-
-    items := make([]*ListItem, 0, len(blob))
-    for _, v := range blob {
-        item, err := ParseListItemFromJSON(v)
-        if err != nil {
-            log.Warn("error parsing item: %s", err)
-        }
-
-        items = append(items, item)
     }
 
     wrapper := hnd.CreateResponseWrapper("ok")

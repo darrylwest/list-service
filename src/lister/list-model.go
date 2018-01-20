@@ -53,6 +53,27 @@ func (list ListItem) Save(db DataAccessObject) (*ListItem, error) {
     return &list, nil
 }
 
+// QueryListItems query and return a list of items
+func QueryListItems(db DataAccessObject, params map[string]interface{}) ([]*ListItem, error) {
+    var items []*ListItem
+    blob, err := db.Query(params)
+    if err != nil {
+        return items, err
+    }
+
+    items = make([]*ListItem, 0, len(blob))
+    for _, v := range blob {
+        item, err := ParseListItemFromJSON(v)
+        if err != nil {
+            log.Warn("error parsing item: %s", err)
+        }
+
+        items = append(items, item)
+    }
+
+    return items, nil
+}
+
 // ToJSON convert the struct to a json blob
 func (list ListItem) ToJSON() ([]byte, error) {
 	blob, err := json.Marshal(list)
