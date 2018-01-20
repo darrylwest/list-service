@@ -114,8 +114,18 @@ func (db Database) Get(key string) ([]byte, error) {
 
 // Query return a set of rows
 func (db Database) Query(params map[string]interface{}) ([][]byte, error) {
-	var list [][]byte
-    var err error
+	list := make([][]byte, 0)
+
+    err := boltdb.View(func(tx *bolt.Tx) error {
+        b := tx.Bucket(listBucket)
+        b.ForEach(func(_, v []byte) error {
+            list = append(list, v)
+            return nil
+        })
+
+        return nil
+    })
+
 
 	return list, err
 }

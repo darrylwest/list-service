@@ -152,6 +152,25 @@ func TestDatabase(t *testing.T) {
 
 
         g.It("should query and return a list of items", func() {
+			cfg := createTestConfig()
+			db, err := lister.NewDatabase(cfg)
+            g.Assert(err).Equal(nil)
+
+			db.Open()
+			defer db.Close()
+
+            params := make(map[string]interface{})
+            items, err := db.Query(params)
+            g.Assert(err).Equal(nil)
+
+            // fmt.Printf("%s\n", items)
+            g.Assert(len(items) > 0).IsTrue()
+
+            for _, v := range items {
+                item, err := lister.ParseListItemFromJSON(v)
+                g.Assert(err).Equal(nil)
+                g.Assert(len(item.ID)).Equal(26)
+            }
         })
 
         g.It("should remove an existing list blob")
