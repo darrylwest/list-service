@@ -133,23 +133,14 @@ func TestDatabase(t *testing.T) {
             g.Assert(ref.Title).Equal(refTitle)
 
             ref.Title = "My alternate title"
-            ref.LastUpdated = time.Now()
-            ref.Version++
 
-            blob, err = ref.ToJSON()
-            g.Assert(err).Equal(nil)
-            err = db.Put(ref.ID, blob)
+            item, err := ref.Save(db)
             g.Assert(err).Equal(nil)
 
-            blob, err = db.Get(ref.ID)
-            g.Assert(err).Equal(nil)
-
-            item, err := lister.ParseListItemFromJSON(blob)
-            g.Assert(err).Equal(nil)
             g.Assert(item.ID).Equal(ref.ID)
             g.Assert(item.Title).Equal(ref.Title)
+            g.Assert(item.LastUpdated.After(item.DateCreated)).IsTrue()
         })
-
 
         g.It("should query and return a list of items", func() {
 			cfg := createTestConfig()

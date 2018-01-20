@@ -36,6 +36,23 @@ type ListItem struct {
 	Status      string                 `json:"status"`
 }
 
+// Save save the current model; update version and last updated date
+func (list ListItem) Save(db DataAccessObject) (*ListItem, error) {
+    list.Version++
+    list.LastUpdated = time.Now()
+
+    blob, err := json.Marshal(list)
+    if err != nil {
+        return nil, err
+    }
+
+    if err = db.Put(list.ID, blob); err != nil {
+        return nil, err
+    }
+
+    return &list, nil
+}
+
 // ToJSON convert the struct to a json blob
 func (list ListItem) ToJSON() ([]byte, error) {
 	blob, err := json.Marshal(list)
