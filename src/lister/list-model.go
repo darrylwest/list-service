@@ -62,7 +62,7 @@ func NewListFromJSON(raw interface{}) (*List, error) {
     list.ID = unique.CreateULID()
     list.DateCreated = time.Now()
     list.LastUpdated = time.Now()
-    list.Version = 1
+    list.Version = 0
 
     return list, nil
 }

@@ -74,9 +74,18 @@ func (hnd Handlers) InsertHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    log.Info("post new list item %v", list)
-
     blob, _ := list.ToJSON()
+    log.Info("post new list item %v", blob)
+
+    /*
+    blob, err = hnd.db.Put(list.ID, blob)
+    if err != nil {
+        log.Error("database insert error: ", err)
+        http.Error(w, err.Error(), 400)
+        return
+    }
+    */
+
 	fmt.Fprintf(w, "%s\n\r", blob)
 }
 

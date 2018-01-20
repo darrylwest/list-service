@@ -95,7 +95,7 @@ func TestListModel(t *testing.T) {
             g.Assert(len(item.ID)).Equal(26)
             g.Assert(item.DateCreated.Year()).Equal(now.Year())
             g.Assert(item.LastUpdated.Year()).Equal(now.Year())
-            g.Assert(item.Version).Equal(1)
+            g.Assert(item.Version).Equal(0)
             g.Assert(item.Title).Equal(hash["title"].(string))
             g.Assert(item.Category).Equal("")
             g.Assert(item.Status).Equal("open")
