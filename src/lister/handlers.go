@@ -40,7 +40,27 @@ func (hnd Handlers) HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 // QueryHandler - queries and returns list items
 func (hnd Handlers) QueryHandler(w http.ResponseWriter, r *http.Request) {
-	hnd.writeErrorResponse(w, "not implemented yet...")
+    params := make(map[string]interface{})
+    blob, err := hnd.db.Query(params)
+    if err != nil {
+        http.Error(w, "Query error", 400)
+        return
+    }
+
+    items := make([]*ListItem, 0, len(blob))
+    for _, v := range blob {
+        item, err := ParseListItemFromJSON(v)
+        if err != nil {
+            log.Warn("error parsing item: %s", err)
+        }
+
+        items = append(items, item)
+    }
+
+    wrapper := hnd.CreateResponseWrapper("ok")
+    wrapper["items"] = items
+
+	hnd.writeJSONBlob(w, wrapper)
 }
 
 // FindByIDHandler - queries and returns list items
@@ -74,17 +94,17 @@ func (hnd Handlers) InsertHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    blob, _ := list.ToJSON()
-    log.Info("post new list item %s", blob)
-
-    /*
-    blob, err = hnd.db.Put(list.ID, blob)
+    list, err = list.Save(hnd.db)
     if err != nil {
-        log.Error("database insert error: ", err)
-        http.Error(w, err.Error(), 400)
+        http.Error(w, "Save data failed: " + err.Error(), 400)
         return
     }
-    */
+
+    blob, err := list.ToJSON()
+    if err != nil {
+        http.Error(w, "Post save data failed: " + err.Error(), 400)
+        return
+    }
 
 	fmt.Fprintf(w, "%s\n\r", blob)
 }
