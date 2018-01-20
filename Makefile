@@ -17,7 +17,8 @@ install-deps:
 	go get -u github.com/darrylwest/cassava-logger/logger
 
 linux:
-	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o docker/list-service src/main.go &&
+	@[ -d docker ] || mkdir docker
+	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o docker/list-service src/main.go
 
 format:
 	( gofmt -s -w src/*.go src/*/*.go test/*/*.go )
@@ -26,7 +27,7 @@ lint:
 	@( golint src/... && golint test/... )
 
 run:
-	go run src/main.go --db-filename ~/database/list-service.db
+	go run src/main.go --db-filename ~/database/list-service.db --port 9040
 
 watch:
 	go-watcher --loglevel=4
