@@ -75,7 +75,7 @@ func (hnd Handlers) InsertHandler(w http.ResponseWriter, r *http.Request) {
     }
 
     blob, _ := list.ToJSON()
-    log.Info("post new list item %v", blob)
+    log.Info("post new list item %s", blob)
 
     /*
     blob, err = hnd.db.Put(list.ID, blob)
