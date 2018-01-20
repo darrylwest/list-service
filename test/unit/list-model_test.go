@@ -84,22 +84,22 @@ func TestListModel(t *testing.T) {
 		})
 
 		g.It("should unmarshall a partial list item from json and create a new list itme", func() {
-            now := time.Now()
+			now := time.Now()
 
-            hash := make(map[string]interface{})
-            hash["title"] = "My Test Title"
-            
-            item, err := lister.NewListItemFromJSON(hash)
-            g.Assert(err).Equal(nil)
+			hash := make(map[string]interface{})
+			hash["title"] = "My Test Title"
 
-            g.Assert(len(item.ID)).Equal(26)
-            g.Assert(item.DateCreated.Year()).Equal(now.Year())
-            g.Assert(item.LastUpdated.Year()).Equal(now.Year())
-            g.Assert(item.Version).Equal(0)
-            g.Assert(item.Title).Equal(hash["title"].(string))
-            g.Assert(item.Category).Equal("")
-            g.Assert(item.Status).Equal("open")
-        })
+			item, err := lister.NewListItemFromJSON(hash)
+			g.Assert(err).Equal(nil)
+
+			g.Assert(len(item.ID)).Equal(26)
+			g.Assert(item.DateCreated.Year()).Equal(now.Year())
+			g.Assert(item.LastUpdated.Year()).Equal(now.Year())
+			g.Assert(item.Version).Equal(0)
+			g.Assert(item.Title).Equal(hash["title"].(string))
+			g.Assert(item.Category).Equal("")
+			g.Assert(item.Status).Equal("open")
+		})
 
 		g.It("should unmarshall a list of items from json", func() {
 			data, err := readListItemResults()

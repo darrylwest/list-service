@@ -60,8 +60,8 @@ func TestDatabase(t *testing.T) {
 	}
 
 	g.Describe("Databse", func() {
-        refid := unique.CreateULID()
-        refTitle := "My Test Title"
+		refid := unique.CreateULID()
+		refTitle := "My Test Title"
 
 		log := lister.CreateLogger()
 		log.SetLevel(4)
@@ -82,21 +82,21 @@ func TestDatabase(t *testing.T) {
 			g.Assert(err).Equal(nil)
 		})
 
-        g.It("should insert a new list blob and successfully read it back", func() {
-            hash := make(map[string]interface{})
-            hash["title"] = refTitle
-            hash["category"] = "TopLevel"
-            
-            list, err := lister.NewListItemFromJSON(hash)
-            list.Version++
-            g.Assert(err).Equal(nil)
-            g.Assert(len(list.ID)).Equal(26)
+		g.It("should insert a new list blob and successfully read it back", func() {
+			hash := make(map[string]interface{})
+			hash["title"] = refTitle
+			hash["category"] = "TopLevel"
 
-            // now assign the reference
-            list.ID = refid
+			list, err := lister.NewListItemFromJSON(hash)
+			list.Version++
+			g.Assert(err).Equal(nil)
+			g.Assert(len(list.ID)).Equal(26)
 
-            blob, err := list.ToJSON()
-            g.Assert(err).Equal(nil)
+			// now assign the reference
+			list.ID = refid
+
+			blob, err := list.ToJSON()
+			g.Assert(err).Equal(nil)
 
 			cfg := createTestConfig()
 			db, err := lister.NewDatabase(cfg)
@@ -104,67 +104,67 @@ func TestDatabase(t *testing.T) {
 			db.Open()
 			defer db.Close()
 
-            err = db.Put(list.ID, blob)
-            g.Assert(err).Equal(nil)
+			err = db.Put(list.ID, blob)
+			g.Assert(err).Equal(nil)
 
-            // now read back the blob
-            blob, err = db.Get(refid)
-            g.Assert(err).Equal(nil)
+			// now read back the blob
+			blob, err = db.Get(refid)
+			g.Assert(err).Equal(nil)
 
-            item, err := lister.ParseListItemFromJSON(blob)
-            g.Assert(err).Equal(nil)
-            g.Assert(item.ID).Equal(list.ID)
-            g.Assert(item.Title).Equal(refTitle)
-        })
+			item, err := lister.ParseListItemFromJSON(blob)
+			g.Assert(err).Equal(nil)
+			g.Assert(item.ID).Equal(list.ID)
+			g.Assert(item.Title).Equal(refTitle)
+		})
 
-        g.It("should update and existing list blob", func() {
+		g.It("should update and existing list blob", func() {
 			cfg := createTestConfig()
 			db, err := lister.NewDatabase(cfg)
-            g.Assert(err).Equal(nil)
+			g.Assert(err).Equal(nil)
 
 			db.Open()
 			defer db.Close()
 
-            blob, err := db.Get(refid)
-            g.Assert(err).Equal(nil)
-            ref, err := lister.ParseListItemFromJSON(blob)
-            g.Assert(err).Equal(nil)
-            g.Assert(ref.ID).Equal(refid)
-            g.Assert(ref.Title).Equal(refTitle)
+			blob, err := db.Get(refid)
+			g.Assert(err).Equal(nil)
+			ref, err := lister.ParseListItemFromJSON(blob)
+			g.Assert(err).Equal(nil)
+			g.Assert(ref.ID).Equal(refid)
+			g.Assert(ref.Title).Equal(refTitle)
 
-            ref.Title = "My alternate title"
+			ref.Title = "My alternate title"
 
-            item, err := ref.Save(db)
-            g.Assert(err).Equal(nil)
+			item, err := ref.Save(db)
+			g.Assert(err).Equal(nil)
 
-            g.Assert(item.ID).Equal(ref.ID)
-            g.Assert(item.Title).Equal(ref.Title)
-            g.Assert(item.LastUpdated.After(item.DateCreated)).IsTrue()
-        })
+			g.Assert(item.ID).Equal(ref.ID)
+			g.Assert(item.Title).Equal(ref.Title)
+			g.Assert(item.LastUpdated.After(item.DateCreated)).IsTrue()
+		})
 
-        g.It("should query and return a list of items", func() {
+		g.It("should query and return a list of items", func() {
 			cfg := createTestConfig()
 			db, err := lister.NewDatabase(cfg)
-            g.Assert(err).Equal(nil)
+			g.Assert(err).Equal(nil)
 
 			db.Open()
 			defer db.Close()
 
-            params := make(map[string]interface{})
-            items, err := db.Query(params)
-            g.Assert(err).Equal(nil)
+			params := make(map[string]interface{})
+			items, err := db.Query(params)
+			g.Assert(err).Equal(nil)
 
-            // fmt.Printf("%s\n", items)
-            g.Assert(len(items) > 0).IsTrue()
+			// fmt.Printf("%s\n", items)
+			g.Assert(len(items) > 0).IsTrue()
 
-            for _, v := range items {
-                item, err := lister.ParseListItemFromJSON(v)
-                g.Assert(err).Equal(nil)
-                g.Assert(len(item.ID)).Equal(26)
-            }
-        })
+			for _, v := range items {
+				item, err := lister.ParseListItemFromJSON(v)
+				g.Assert(err).Equal(nil)
+				g.Assert(len(item.ID)).Equal(26)
+			}
+		})
 
-        g.It("should remove an existing list blob")
+		g.It("should remove an existing list blob")
 
 		g.It("should make a backup of a known database", func() {
 			cfg := createTestConfig()

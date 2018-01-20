@@ -16,11 +16,11 @@ import (
 )
 
 const (
-    // ListStatusOpen tags an item as open
-	ListStatusOpen     = "open"
-    // ListStatusClosed tags an item as closed
-	ListStatusClosed   = "closed"
-    // ListStatusArchived tags an item as archived
+	// ListStatusOpen tags an item as open
+	ListStatusOpen = "open"
+	// ListStatusClosed tags an item as closed
+	ListStatusClosed = "closed"
+	// ListStatusArchived tags an item as archived
 	ListStatusArchived = "archived"
 )
 
@@ -38,50 +38,50 @@ type ListItem struct {
 
 // Save save the current model; update version and last updated date
 func (list ListItem) Save(db DataAccessObject) (*ListItem, error) {
-    list.Version++
-    list.LastUpdated = time.Now()
+	list.Version++
+	list.LastUpdated = time.Now()
 
-    blob, err := json.Marshal(list)
-    if err != nil {
-        return nil, err
-    }
+	blob, err := json.Marshal(list)
+	if err != nil {
+		return nil, err
+	}
 
-    if err = db.Put(list.ID, blob); err != nil {
-        return nil, err
-    }
+	if err = db.Put(list.ID, blob); err != nil {
+		return nil, err
+	}
 
-    return &list, nil
+	return &list, nil
 }
 
 // QueryListItems query and return a list of items
 func QueryListItems(db DataAccessObject, params map[string]interface{}) ([]*ListItem, error) {
-    var items []*ListItem
-    blob, err := db.Query(params)
-    if err != nil {
-        return items, err
-    }
+	var items []*ListItem
+	blob, err := db.Query(params)
+	if err != nil {
+		return items, err
+	}
 
-    items = make([]*ListItem, 0, len(blob))
-    for _, v := range blob {
-        item, err := ParseListItemFromJSON(v)
-        if err != nil {
-            log.Warn("error parsing item: %s", err)
-        }
+	items = make([]*ListItem, 0, len(blob))
+	for _, v := range blob {
+		item, err := ParseListItemFromJSON(v)
+		if err != nil {
+			log.Warn("error parsing item: %s", err)
+		}
 
-        items = append(items, item)
-    }
+		items = append(items, item)
+	}
 
-    return items, nil
+	return items, nil
 }
 
 // GetListItem fetch and return the list item by id
 func GetListItem(db DataAccessObject, id string) (*ListItem, error) {
-    blob, err := db.Get(id)
-    if err != nil {
-        return nil, err
-    }
+	blob, err := db.Get(id)
+	if err != nil {
+		return nil, err
+	}
 
-    return ParseListItemFromJSON(blob)
+	return ParseListItemFromJSON(blob)
 }
 
 // ToJSON convert the struct to a json blob
@@ -93,22 +93,22 @@ func (list ListItem) ToJSON() ([]byte, error) {
 
 // ParseListItemFromJSON parse the blob and return a list item
 func ParseListItemFromJSON(blob []byte) (*ListItem, error) {
-    var hash map[string]interface{}
-    err := json.Unmarshal(blob, &hash)
-    if err != nil {
-        return nil, err
-    }
+	var hash map[string]interface{}
+	err := json.Unmarshal(blob, &hash)
+	if err != nil {
+		return nil, err
+	}
 
-    return ListItemFromJSON(hash)
+	return ListItemFromJSON(hash)
 }
 
 // NewListItemFromJSON create a new list item from the partial json blob
 func NewListItemFromJSON(raw interface{}) (*ListItem, error) {
 
 	hash, ok := raw.(map[string]interface{})
-    if !ok {
+	if !ok {
 		return nil, fmt.Errorf("could not convert raw interface to hash map")
-    }
+	}
 
 	list := new(ListItem)
 
@@ -122,12 +122,12 @@ func NewListItemFromJSON(raw interface{}) (*ListItem, error) {
 		list.Status = ListStatusOpen
 	}
 
-    list.ID = unique.CreateULID()
-    list.DateCreated = time.Now()
-    list.LastUpdated = time.Now()
-    list.Version = 0
+	list.ID = unique.CreateULID()
+	list.DateCreated = time.Now()
+	list.LastUpdated = time.Now()
+	list.Version = 0
 
-    return list, nil
+	return list, nil
 }
 
 // ListItemFromJSON convert the hash interface to a list item struct

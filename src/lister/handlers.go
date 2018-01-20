@@ -40,95 +40,95 @@ func (hnd Handlers) HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 // QueryHandler - queries and returns list items
 func (hnd Handlers) QueryHandler(w http.ResponseWriter, r *http.Request) {
-    params := make(map[string]interface{})
-    items, err := QueryListItems(hnd.db, params)
-    if err != nil {
-        http.Error(w, "Query error", 400)
-        return
-    }
+	params := make(map[string]interface{})
+	items, err := QueryListItems(hnd.db, params)
+	if err != nil {
+		http.Error(w, "Query error", 400)
+		return
+	}
 
-    wrapper := hnd.CreateResponseWrapper("ok")
-    wrapper["items"] = items
+	wrapper := hnd.CreateResponseWrapper("ok")
+	wrapper["items"] = items
 
 	hnd.writeJSONBlob(w, wrapper)
 }
 
 // FindByIDHandler - queries and returns list items
 func (hnd Handlers) FindByIDHandler(w http.ResponseWriter, r *http.Request) {
-    id := bone.GetValue(r, "id")
+	id := bone.GetValue(r, "id")
 
-    item, err := GetListItem(hnd.db, id)
-    if err != nil {
-        http.Error(w, "Missing request body", 400)
-        return
-    }
+	item, err := GetListItem(hnd.db, id)
+	if err != nil {
+		http.Error(w, "Missing request body", 400)
+		return
+	}
 
-    wrapper := hnd.CreateResponseWrapper("ok")
-    wrapper["item"] = item
+	wrapper := hnd.CreateResponseWrapper("ok")
+	wrapper["item"] = item
 
 	hnd.writeJSONBlob(w, wrapper)
 }
 
 // UpdateHandler - updates and existing list item
 func (hnd Handlers) UpdateHandler(w http.ResponseWriter, r *http.Request) {
-    if r.Body == nil {
-        http.Error(w, "Missing request body", 400)
-        return
-    }
+	if r.Body == nil {
+		http.Error(w, "Missing request body", 400)
+		return
+	}
 
-    var data map[string]interface{}
+	var data map[string]interface{}
 
-    err := json.NewDecoder(r.Body).Decode(&data)
-    if err != nil {
-        http.Error(w, "Request body has errors", 400)
-        return
-    }
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, "Request body has errors", 400)
+		return
+	}
 
-    item, err := ListItemFromJSON(data)
+	item, err := ListItemFromJSON(data)
 
-    // todo -- fetch and compare to version...
+	// todo -- fetch and compare to version...
 
-    item, err = item.Save(hnd.db)
-    if err != nil {
-        http.Error(w, "Request body has errors", 400)
-        return
-    }
+	item, err = item.Save(hnd.db)
+	if err != nil {
+		http.Error(w, "Request body has errors", 400)
+		return
+	}
 
-    wrapper := hnd.CreateResponseWrapper("ok")
-    wrapper["item"] = item
+	wrapper := hnd.CreateResponseWrapper("ok")
+	wrapper["item"] = item
 
 	hnd.writeJSONBlob(w, wrapper)
 }
 
 // InsertHandler - inserts a new list item
 func (hnd Handlers) InsertHandler(w http.ResponseWriter, r *http.Request) {
-    if r.Body == nil {
-        http.Error(w, "Missing request body", 400)
-        return
-    }
+	if r.Body == nil {
+		http.Error(w, "Missing request body", 400)
+		return
+	}
 
-    var data map[string]interface{}
+	var data map[string]interface{}
 
-    err := json.NewDecoder(r.Body).Decode(&data)
-    if err != nil {
-        http.Error(w, "Request body has errors", 400)
-        return
-    }
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, "Request body has errors", 400)
+		return
+	}
 
-    item, err := NewListItemFromJSON(data)
-    if err != nil {
-        http.Error(w, "Post data parse failed: " + err.Error(), 400)
-        return
-    }
+	item, err := NewListItemFromJSON(data)
+	if err != nil {
+		http.Error(w, "Post data parse failed: "+err.Error(), 400)
+		return
+	}
 
-    item, err = item.Save(hnd.db)
-    if err != nil {
-        http.Error(w, "Save data failed: " + err.Error(), 400)
-        return
-    }
+	item, err = item.Save(hnd.db)
+	if err != nil {
+		http.Error(w, "Save data failed: "+err.Error(), 400)
+		return
+	}
 
-    wrapper := hnd.CreateResponseWrapper("ok")
-    wrapper["item"] = item
+	wrapper := hnd.CreateResponseWrapper("ok")
+	wrapper["item"] = item
 
 	hnd.writeJSONBlob(w, wrapper)
 }
@@ -140,7 +140,6 @@ func (hnd Handlers) DeleteHandler(w http.ResponseWriter, r *http.Request) {
 
 // StatusHandler returns the service status
 func (hnd *Handlers) StatusHandler(w http.ResponseWriter, r *http.Request) {
-
 	blob := GetStatusAsJSON(hnd.cfg)
 
 	log.Info(blob)

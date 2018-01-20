@@ -8,7 +8,7 @@
 package lister
 
 import (
-    "fmt"
+	"fmt"
 	"strings"
 	"time"
 
@@ -76,39 +76,39 @@ func (db Database) Open() error {
 	return err
 }
 
-// Put update database with blob 
-func (db Database) Put(key string, blob []byte)  error  {
-    if len(key) < 26 {
-        return fmt.Errorf("invalid key: %s", key)
-    }
+// Put update database with blob
+func (db Database) Put(key string, blob []byte) error {
+	if len(key) < 26 {
+		return fmt.Errorf("invalid key: %s", key)
+	}
 
-    log.Info("put %s", blob)
+	log.Info("put %s", blob)
 
-    err := boltdb.Update(func(tx *bolt.Tx) error {
-        b := tx.Bucket(listBucket)
-        err := b.Put([]byte(key), blob)
+	err := boltdb.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(listBucket)
+		err := b.Put([]byte(key), blob)
 
-        return err
-    })
+		return err
+	})
 
 	return err
 }
 
 // Get fetch and return the data row based on key
 func (db Database) Get(key string) ([]byte, error) {
-    var blob []byte
+	var blob []byte
 
-    err := boltdb.View(func(tx *bolt.Tx) error {
-        b := tx.Bucket(listBucket)
-        blob = b.Get([]byte(key))
-        if len(blob) == 0 {
-            return fmt.Errorf(DoesNotExistForID, "listitem", key)
-        }
+	err := boltdb.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket(listBucket)
+		blob = b.Get([]byte(key))
+		if len(blob) == 0 {
+			return fmt.Errorf(DoesNotExistForID, "listitem", key)
+		}
 
-        return nil
-    })
+		return nil
+	})
 
-    log.Info("put %s", blob)
+	log.Info("put %s", blob)
 	return blob, err
 }
 
@@ -116,24 +116,23 @@ func (db Database) Get(key string) ([]byte, error) {
 func (db Database) Query(params map[string]interface{}) ([][]byte, error) {
 	list := make([][]byte, 0)
 
-    err := boltdb.View(func(tx *bolt.Tx) error {
-        b := tx.Bucket(listBucket)
-        b.ForEach(func(_, v []byte) error {
-            list = append(list, v)
-            return nil
-        })
+	err := boltdb.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket(listBucket)
+		b.ForEach(func(_, v []byte) error {
+			list = append(list, v)
+			return nil
+		})
 
-        return nil
-    })
-
+		return nil
+	})
 
 	return list, err
 }
 
 // Remove delete a row
 func (db Database) Remove(key string) ([]byte, error) {
-    var blob []byte
-    var err error
+	var blob []byte
+	var err error
 	return blob, err
 }
 
