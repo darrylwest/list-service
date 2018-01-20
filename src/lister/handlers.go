@@ -222,7 +222,7 @@ func (hnd Handlers) writeJSONBlob(w http.ResponseWriter, wrapper map[string]inte
 		return
 	}
 
-	log.Info("blob: %s", blob)
+	log.Debug("blob: %s", blob)
 	fmt.Fprintf(w, "%s\n\r", blob)
 }
 

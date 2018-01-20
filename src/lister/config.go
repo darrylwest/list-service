@@ -24,7 +24,7 @@ type Config struct {
 func NewDefaultConfig() *Config {
 	cfg := new(Config)
 
-	cfg.Port = 8080
+	cfg.Port = 80
 	cfg.LogLevel = 2
 	cfg.DbFilename = "/data/list-service.db"
 
