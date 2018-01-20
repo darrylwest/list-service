@@ -16,11 +16,15 @@ import (
 )
 
 const (
+    // ListStatusOpen tags an item as open
 	ListStatusOpen     = "open"
+    // ListStatusClosed tags an item as closed
 	ListStatusClosed   = "closed"
+    // ListStatusArchived tags an item as archived
 	ListStatusArchived = "archived"
 )
 
+// ListItem the list item structure
 type ListItem struct {
 	ID          string                 `json:"id"`
 	DateCreated time.Time              `json:"dateCreated"`
@@ -32,7 +36,7 @@ type ListItem struct {
 	Status      string                 `json:"status"`
 }
 
-// ToJSON
+// ToJSON convert the struct to a json blob
 func (list ListItem) ToJSON() ([]byte, error) {
 	blob, err := json.Marshal(list)
 
@@ -78,7 +82,7 @@ func NewListItemFromJSON(raw interface{}) (*ListItem, error) {
     return list, nil
 }
 
-// ListItemFromJSON
+// ListItemFromJSON convert the hash interface to a list item struct
 func ListItemFromJSON(raw interface{}) (*ListItem, error) {
 	var err error
 	hash, ok := raw.(map[string]interface{})

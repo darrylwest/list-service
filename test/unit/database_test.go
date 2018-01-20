@@ -151,7 +151,8 @@ func TestDatabase(t *testing.T) {
         })
 
 
-        g.It("should query and return a list of items")
+        g.It("should query and return a list of items", func() {
+        })
 
         g.It("should remove an existing list blob")
 

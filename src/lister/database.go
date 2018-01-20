@@ -16,6 +16,7 @@ import (
 )
 
 const (
+	// DoesNotExistForID error message for not found
 	DoesNotExistForID = "%s does not exist for id %s"
 )
 
@@ -24,13 +25,14 @@ var (
 	boltdb     *bolt.DB
 )
 
+// DataAccessObject the dao interface methods
 type DataAccessObject interface {
 	Open() error
 	Close() bool
 	Put(string, []byte) error
 	Get(string) ([]byte, error)
-	Query(map[string]interface{}) ([]map[string]interface{}, error)
-	Remove(string) (map[string]interface{}, error)
+	Query(map[string]interface{}) ([][]byte, error)
+	Remove(string) ([]byte, error)
 	Backup() (string, error)
 }
 
@@ -92,6 +94,7 @@ func (db Database) Put(key string, blob []byte)  error  {
 	return err
 }
 
+// Get fetch and return the data row based on key
 func (db Database) Get(key string) ([]byte, error) {
     var blob []byte
 
@@ -109,15 +112,19 @@ func (db Database) Get(key string) ([]byte, error) {
 	return blob, err
 }
 
-func (db Database) Remove(key string) (map[string]interface{}, error) {
-	model := make(map[string]interface{})
-	return model, nil
+// Query return a set of rows
+func (db Database) Query(params map[string]interface{}) ([][]byte, error) {
+	var list [][]byte
+    var err error
+
+	return list, err
 }
 
-func (db Database) Query(params map[string]interface{}) ([]map[string]interface{}, error) {
-	list := make([]map[string]interface{}, 0)
-
-	return list, nil
+// Remove delete a row
+func (db Database) Remove(key string) ([]byte, error) {
+    var blob []byte
+    var err error
+	return blob, err
 }
 
 // Close close the active database
