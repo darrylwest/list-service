@@ -41,10 +41,12 @@ host="http://localhost:9040"
 
 for item in $list
 do
-    item=`echo $item |sed -e 's/-/ /'`
-    # curl -X POST http://
+    item=`echo $item | sed -e 's/-/ /'`
+
     data="{\"title\":\"$item\":\"status\":\"open\"}"
+
     # echo $data
-    curl -d "$data" -X POST $host/list
+
+    curl -v -H 'Content-type: application/json' -d $data $host/list
 done
 
