@@ -44,9 +44,9 @@ for item in $list
 do
     item=`echo $item | sed -e 's/-/ /'`
 
-    data="{\"title\":\"$item\":\"status\":\"open\"}"
+    data='{"title":"'${item}'","category":"produce","status":"open"}'
 
-    # echo $data
+    echo $data
 
     curl -v -H 'Content-type: application/json' -d $data $host/list
 done

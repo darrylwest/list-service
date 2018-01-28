@@ -35,6 +35,7 @@ func NewHandlers(cfg *Config) *Handlers {
 
 // HomeHandler return the home page
 func (hnd Handlers) HomeHandler(w http.ResponseWriter, r *http.Request) {
+    // read and serve the index page...
 	hnd.StatusHandler(w, r)
 }
 
@@ -111,21 +112,21 @@ func (hnd Handlers) InsertHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
-        log.Error("decode error: %s", err)
+		log.Error("decode error: %s", err)
 		http.Error(w, "Request body has errors", 400)
 		return
 	}
 
 	item, err := NewListItemFromJSON(data)
 	if err != nil {
-        log.Error("new item error: %s", err)
+		log.Error("new item error: %s", err)
 		http.Error(w, "Post data parse failed: "+err.Error(), 400)
 		return
 	}
 
 	item, err = item.Save(hnd.db)
 	if err != nil {
-        log.Error("save item error: %s", err)
+		log.Error("save item error: %s", err)
 		http.Error(w, "Save data failed: "+err.Error(), 400)
 		return
 	}
