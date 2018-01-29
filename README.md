@@ -41,6 +41,10 @@ The test controller includes an http REST interface to respond to end point requ
 
 ## Rest API
 
+### Proxy Prefix
+
+Internal requests use the following endpoints but are usually prefixed when exposed to the web. Prefixes are specific to the list type, so a ToDo list may have a prefix of `/todoapi` to distinguesh from a `/shopapi`. The proxy strips this prefix off prior to forwarding the request, so the following API is unchanged across various implementations.
+
 * GET  /list/query - return zero or more items from the list based on query parameters
 * GET  /list/:id   - return the list item by id
 * POST /list/      - insert a new list item; list data is posted as a json blob
