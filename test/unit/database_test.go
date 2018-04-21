@@ -9,8 +9,8 @@ package unit
 
 import (
 	"fmt"
-	"lister"
 	"os"
+	"service"
 	"testing"
 	"time"
 
@@ -25,8 +25,8 @@ const (
 	testdb = "../data/list-service-test.db"
 )
 
-func createTestConfig() *lister.Config {
-	cfg := lister.NewDefaultConfig()
+func createTestConfig() *service.Config {
+	cfg := service.NewDefaultConfig()
 	cfg.DbFilename = testdb
 
 	return cfg
@@ -63,19 +63,19 @@ func TestDatabase(t *testing.T) {
 		refid := unique.CreateULID()
 		refTitle := "My Test Title"
 
-		log := lister.CreateLogger()
+		log := service.CreateLogger()
 		log.SetLevel(4)
 
 		g.It("should create a database struct", func() {
 			cfg := createTestConfig()
-			db, err := lister.NewDatabase(cfg)
+			db, err := service.NewDatabase(cfg)
 			g.Assert(err).Equal(nil)
-			g.Assert(fmt.Sprintf("%T", db)).Equal("lister.Database")
+			g.Assert(fmt.Sprintf("%T", db)).Equal("service.Database")
 		})
 
 		g.It("should open the database", func() {
 			cfg := createTestConfig()
-			db, err := lister.NewDatabase(cfg)
+			db, err := service.NewDatabase(cfg)
 
 			err = db.Open()
 			defer db.Close()
@@ -87,7 +87,7 @@ func TestDatabase(t *testing.T) {
 			hash["title"] = refTitle
 			hash["category"] = "TopLevel"
 
-			list, err := lister.NewListItemFromJSON(hash)
+			list, err := service.NewListItemFromJSON(hash)
 			list.Version++
 			g.Assert(err).Equal(nil)
 			g.Assert(len(list.ID)).Equal(26)
@@ -99,7 +99,7 @@ func TestDatabase(t *testing.T) {
 			g.Assert(err).Equal(nil)
 
 			cfg := createTestConfig()
-			db, err := lister.NewDatabase(cfg)
+			db, err := service.NewDatabase(cfg)
 
 			db.Open()
 			defer db.Close()
@@ -111,7 +111,7 @@ func TestDatabase(t *testing.T) {
 			blob, err = db.Get(refid)
 			g.Assert(err).Equal(nil)
 
-			item, err := lister.ParseListItemFromJSON(blob)
+			item, err := service.ParseListItemFromJSON(blob)
 			g.Assert(err).Equal(nil)
 			g.Assert(item.ID).Equal(list.ID)
 			g.Assert(item.Title).Equal(refTitle)
@@ -119,7 +119,7 @@ func TestDatabase(t *testing.T) {
 
 		g.It("should update and existing list blob", func() {
 			cfg := createTestConfig()
-			db, err := lister.NewDatabase(cfg)
+			db, err := service.NewDatabase(cfg)
 			g.Assert(err).Equal(nil)
 
 			db.Open()
@@ -127,7 +127,7 @@ func TestDatabase(t *testing.T) {
 
 			blob, err := db.Get(refid)
 			g.Assert(err).Equal(nil)
-			ref, err := lister.ParseListItemFromJSON(blob)
+			ref, err := service.ParseListItemFromJSON(blob)
 			g.Assert(err).Equal(nil)
 			g.Assert(ref.ID).Equal(refid)
 			g.Assert(ref.Title).Equal(refTitle)
@@ -144,7 +144,7 @@ func TestDatabase(t *testing.T) {
 
 		g.It("should query and return a list of items", func() {
 			cfg := createTestConfig()
-			db, err := lister.NewDatabase(cfg)
+			db, err := service.NewDatabase(cfg)
 			g.Assert(err).Equal(nil)
 
 			db.Open()
@@ -158,7 +158,7 @@ func TestDatabase(t *testing.T) {
 			g.Assert(len(items) > 0).IsTrue()
 
 			for _, v := range items {
-				item, err := lister.ParseListItemFromJSON(v)
+				item, err := service.ParseListItemFromJSON(v)
 				g.Assert(err).Equal(nil)
 				g.Assert(len(item.ID)).Equal(26)
 			}
@@ -168,7 +168,7 @@ func TestDatabase(t *testing.T) {
 
 		g.It("should make a backup of a known database", func() {
 			cfg := createTestConfig()
-			db, err := lister.NewDatabase(cfg)
+			db, err := service.NewDatabase(cfg)
 			g.Assert(err).Equal(nil)
 			defer db.Close()
 

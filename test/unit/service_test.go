@@ -9,7 +9,7 @@ package unit
 
 import (
 	"fmt"
-	"lister"
+	"service"
 	"testing"
 
 	. "github.com/franela/goblin"
@@ -19,18 +19,18 @@ func TestService(t *testing.T) {
 	g := Goblin(t)
 
 	g.Describe("Service", func() {
-		log := lister.CreateLogger()
+		log := service.CreateLogger()
 		log.SetLevel(4)
-		cfg := lister.NewDefaultConfig()
+		cfg := service.NewDefaultConfig()
 
 		g.It("should create a service struct", func() {
-			service, err := lister.NewService(cfg)
+			service, err := service.NewService(cfg)
 			g.Assert(err).Equal(nil)
-			g.Assert(fmt.Sprintf("%T", service)).Equal("*lister.Service")
+			g.Assert(fmt.Sprintf("%T", service)).Equal("*service.Service")
 		})
 
 		g.It("should initialize the router", func() {
-			service, err := lister.NewService(cfg)
+			service, err := service.NewService(cfg)
 			g.Assert(err).Equal(nil)
 
 			router := service.CreateRoutes()

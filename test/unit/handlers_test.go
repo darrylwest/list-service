@@ -9,7 +9,7 @@ package unit
 
 import (
 	"fmt"
-	"lister"
+	"service"
 	"testing"
 
 	. "github.com/franela/goblin"
@@ -19,13 +19,13 @@ func TestHandlers(t *testing.T) {
 	g := Goblin(t)
 
 	g.Describe("Handlers", func() {
-		log := lister.CreateLogger()
+		log := service.CreateLogger()
 		log.SetLevel(3)
-		cfg := lister.NewDefaultConfig()
+		cfg := service.NewDefaultConfig()
 
 		g.It("should return a valid handler object", func() {
-			hnd := lister.NewHandlers(cfg)
-			g.Assert(fmt.Sprintf("%T", hnd)).Equal("*lister.Handlers")
+			hnd := service.NewHandlers(cfg)
+			g.Assert(fmt.Sprintf("%T", hnd)).Equal("*service.Handlers")
 
 		})
 

@@ -5,7 +5,7 @@
 // @created 2017-11-27 08:35:20
 //
 
-package lister
+package service
 
 import (
 	"encoding/json"
@@ -35,7 +35,7 @@ func NewHandlers(cfg *Config) *Handlers {
 
 // HomeHandler return the home page
 func (hnd Handlers) HomeHandler(w http.ResponseWriter, r *http.Request) {
-    // read and serve the index page...
+	// read and serve the index page...
 	hnd.StatusHandler(w, r)
 }
 

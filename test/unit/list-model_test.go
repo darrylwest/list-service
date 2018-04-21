@@ -11,7 +11,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"lister"
+	"service"
 	"strings"
 	"testing"
 	"time"
@@ -38,8 +38,8 @@ func readListItemResults() (map[string]interface{}, error) {
 	return data, nil
 }
 
-func createListItemModel(title string) lister.ListItem {
-	item := lister.ListItem{}
+func createListItemModel(title string) service.ListItem {
+	item := service.ListItem{}
 
 	item.ID = unique.CreateULID()
 	item.DateCreated = time.Now()
@@ -47,7 +47,7 @@ func createListItemModel(title string) lister.ListItem {
 	item.Version = 1
 	item.Title = title
 
-	item.Status = lister.ListStatusOpen
+	item.Status = service.ListStatusOpen
 
 	return item
 }
@@ -56,17 +56,17 @@ func TestListModel(t *testing.T) {
 	g := Goblin(t)
 
 	g.Describe("ListItemModel", func() {
-		lister.CreateLogger()
+		service.CreateLogger()
 
 		g.It("should create a list struct", func() {
-			model := lister.ListItem{}
-			g.Assert(fmt.Sprintf("%T", model)).Equal("lister.ListItem")
+			model := service.ListItem{}
+			g.Assert(fmt.Sprintf("%T", model)).Equal("service.ListItem")
 		})
 
 		g.It("should serialize a list object to json", func() {
 			model := createListItemModel("my subject")
 
-			g.Assert(fmt.Sprintf("%T", model)).Equal("lister.ListItem")
+			g.Assert(fmt.Sprintf("%T", model)).Equal("service.ListItem")
 
 			blob, err := model.ToJSON()
 			g.Assert(err).Equal(nil)
@@ -89,7 +89,7 @@ func TestListModel(t *testing.T) {
 			hash := make(map[string]interface{})
 			hash["title"] = "My Test Title"
 
-			item, err := lister.NewListItemFromJSON(hash)
+			item, err := service.NewListItemFromJSON(hash)
 			g.Assert(err).Equal(nil)
 
 			g.Assert(len(item.ID)).Equal(26)
@@ -109,7 +109,7 @@ func TestListModel(t *testing.T) {
 			g.Assert(ok).IsTrue()
 
 			for _, raw := range rawItems {
-				list, err := lister.ListItemFromJSON(raw)
+				list, err := service.ListItemFromJSON(raw)
 
 				g.Assert(err).Equal(nil)
 				g.Assert(len(list.ID)).Equal(26)
@@ -120,7 +120,7 @@ func TestListModel(t *testing.T) {
 				g.Assert(len(list.Title) > 5).IsTrue()
 				g.Assert(list.Category).Equal("")
 
-				g.Assert(list.Status).Equal(lister.ListStatusOpen)
+				g.Assert(list.Status).Equal(service.ListStatusOpen)
 
 				g.Assert(len(list.Attributes)).Equal(0)
 			}

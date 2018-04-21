@@ -6,17 +6,17 @@
 
 package main
 
-import "lister"
+import "service"
 
 func main() {
-	lister.CreateLogger()
-	cfg := lister.ParseArgs()
+	service.CreateLogger()
+	cfg := service.ParseArgs()
 	if cfg == nil {
-		lister.ShowHelp()
+		service.ShowHelp()
 		return
 	}
 
-	service, err := lister.NewService(cfg)
+	service, err := service.NewService(cfg)
 	if err != nil {
 		panic(err)
 	}
