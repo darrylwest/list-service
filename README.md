@@ -21,22 +21,21 @@ The test controller includes an http REST interface to respond to end point requ
 ```
                       ... Docker Container Environment ...
 
-                               Edge Proxy
-                              +------------+           List Service-1
-                              |            |         +---------------+
-                              |            |-------->| http/rest     |
-                              |            |<--------| list.db       |
-                              | http/rest  |         +---------------+     List Service-2
-                              |            |                             +---------------+
-                              |            |---------------------------->| http/rest     |
-                              |            |<----------------------------| list.db       |
-                              |            |                             |               |
-          +-----------+       |            |           List Service-3    +---------------+
-          |           |       |            |         +---------------+
-          | Sidecar   |<----->|            |-------->| http/rest     |
-          | Container |       |            |<--------| list.db       |
-          |           |       |            |         |               |
-          +-----------+       +------------+         +---------------+
+       Edge Proxy
+      +------------+          List Service-1
+      |            |         +---------------+
+      |            |-------->| http/rest     |
+      |            |<--------|               |                     +------+
+      | http/rest  |         +---------------+  List Service-2     |  db1 |
+      |            |                           +--------------+    +------+
+      |            |-------------------------->| http/rest    |    +------+
+      |            |<--------------------------|              |    | db2  |
+      |            |          List Service-3   +--------------+    +------+
+      |            |         +--------------+                      +------+
+      |            |-------->| http/rest    |                      | db3  |
+      |            |<--------|              |                      +------+
+      |            |         +--------------+
+      +------------+         
 ```
 
 ## Rest API
@@ -45,6 +44,7 @@ The test controller includes an http REST interface to respond to end point requ
 
 Internal requests use the following endpoints but are usually prefixed when exposed to the web. Prefixes are specific to the list type, so a ToDo list may have a prefix of `/todoapi` to distinguesh from a `/shopapi`. The proxy strips this prefix off prior to forwarding the request, so the following API is unchanged across various implementations.
 
+* GET  /           - return the html home page
 * GET  /list/query - return zero or more items from the list based on query parameters
 * GET  /list/:id   - return the list item by id
 * POST /list/      - insert a new list item; list data is posted as a json blob
@@ -60,16 +60,31 @@ Internal requests use the following endpoints but are usually prefixed when expo
 The list model is quite basic.  Attribuites enable extending the base document model.  Models are serialized to JSON prior to saving to database.
 
 ```
-generic list schema
+list schema
     id string // ulid
     dateCreated time.Time // ISO8601 / RFC3339 
     lastUpdated time.Time // ISO8601 / RFC3339 
     version int64
-    category string   // optional category or list of categories
-    title string      // the primary list item title
-    attributes map[string]interface{} // adhoc attributes to support various applications
+    owner string // primary ulid of user/owner
+    name string      // the primary list name
+    category string   // optional category eg., grocery, shopping, todo
+    description string   // optional 
+    info  map[string]interface{} // adhoc attributes to support various applications
     status string     // open | closed | archived
+
+item schema
+    id string // ulid
+    dateCreated time.Time // ISO8601 / RFC3339 
+    lastUpdated time.Time // ISO8601 / RFC3339 
+    version int64
+
+user schema
+    id string // ulid
+    dateCreated time.Time // ISO8601 / RFC3339 
+    lastUpdated time.Time // ISO8601 / RFC3339 
+    version int64
+
 ```
 
-###### darryl.west | 2018.01.18
+###### darryl.west | 2018.04.21
 

@@ -33,7 +33,7 @@ func NewHandlers(cfg *Config) *Handlers {
 	return &hnd
 }
 
-// HomeHandler return the home page
+// HomeHandler read templates; compile and return the home page
 func (hnd Handlers) HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// read and serve the index page...
 	hnd.StatusHandler(w, r)
