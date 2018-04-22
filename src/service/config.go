@@ -15,9 +15,8 @@ import (
 
 // Config the config structure
 type Config struct {
-	Port       int
-	LogLevel   int
-	DbFilename string
+	Port     int
+	LogLevel int
 }
 
 // NewDefaultConfig default settings
@@ -26,7 +25,6 @@ func NewDefaultConfig() *Config {
 
 	cfg.Port = 80
 	cfg.LogLevel = 2
-	cfg.DbFilename = "/data/list-service.db"
 
 	return cfg
 }
@@ -45,7 +43,6 @@ func ParseArgs() *Config {
 	vers := flag.Bool("version", false, "show the version and exit")
 	level := flag.Int("loglevel", dflt.LogLevel, "set the server's log level 0..5 for trace..error, default info=2")
 	port := flag.Int("port", dflt.Port, "set the server's listening port")
-	dbfilename := flag.String("db-filename", dflt.DbFilename, "set the databse file")
 
 	flag.Parse()
 
@@ -57,9 +54,8 @@ func ParseArgs() *Config {
 	log.Info("%s Version: %s\n", path.Base(os.Args[0]), Version())
 
 	cfg := Config{
-		Port:       *port,
-		LogLevel:   *level,
-		DbFilename: *dbfilename,
+		Port:     *port,
+		LogLevel: *level,
 	}
 
 	log.SetLevel(cfg.LogLevel)

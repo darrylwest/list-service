@@ -1,7 +1,7 @@
 export GOPATH:=$(HOME)/.gopath:$(PWD)
 
 test:
-	@( clear && go vet src/*.go && go vet src/*/*.go && cd test/unit && go test )
+	@( clear && go vet src/*.go && go vet src/service/*.go && go vet src/data/*.go && cd test/unit && go test )
 	@( golint src/... && golint test/... )
 
 build: 
@@ -13,8 +13,8 @@ install-deps:
 	go get github.com/golang/lint/golint
 	go get github.com/franela/goblin
 	go get github.com/darrylwest/go-unique/unique
-	go get github.com/boltdb/bolt
 	go get -u github.com/darrylwest/cassava-logger/logger
+	go get github.com/lib/pq
 
 linux:
 	@[ -d docker ] || mkdir docker

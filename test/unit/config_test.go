@@ -31,7 +31,6 @@ func TestConfig(t *testing.T) {
 			g.Assert(fmt.Sprintf("%T", cfg)).Equal("*service.Config")
 			g.Assert(cfg.Port).Equal(80)
 			g.Assert(cfg.LogLevel).Equal(2)
-			g.Assert(cfg.DbFilename != "").IsTrue()
 		})
 
 		g.It("should parse an empty command line and return default config", func() {
