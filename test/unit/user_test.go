@@ -8,9 +8,9 @@
 package unit
 
 import (
-	"data"
 	"fmt"
 	"service"
+	"service/database"
 	"testing"
 
 	. "github.com/franela/goblin"
@@ -23,9 +23,9 @@ func TestUser(t *testing.T) {
 		log := service.CreateLogger()
 
 		g.It("should create a User struct", func() {
-			user := data.User{}
+			user := database.User{}
 			log.Info("%v", user)
-			g.Assert(fmt.Sprintf("%T", user)).Equal("data.User")
+			g.Assert(fmt.Sprintf("%T", user)).Equal("database.User")
 			g.Assert(user.ID).Equal("")
 			g.Assert(user.Version).Equal(uint64(0))
 			g.Assert(user.Username).Equal("")
@@ -36,13 +36,13 @@ func TestUser(t *testing.T) {
 		})
 
 		g.It("should create a new populated DOI", func() {
-			doi := data.NewDOI()
+			doi := database.NewDOI()
 			name := "fredv"
 
-			user := data.NewUser(doi, name)
+			user := database.NewUser(doi, name)
 			log.Info("%v", user)
 
-			g.Assert(fmt.Sprintf("%T", user)).Equal("data.User")
+			g.Assert(fmt.Sprintf("%T", user)).Equal("database.User")
 			g.Assert(user.ID).Equal(doi.ID)
 			g.Assert(user.DateCreated).Equal(doi.DateCreated)
 			g.Assert(user.LastUpdated).Equal(doi.LastUpdated)

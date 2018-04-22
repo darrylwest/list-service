@@ -5,7 +5,7 @@
 // @created 2018-01-17 12:57:59
 //
 
-package data
+package database
 
 import (
 	"github.com/darrylwest/go-unique/unique"

@@ -5,7 +5,7 @@
 // @created 2018-04-22 12:50:14
 //
 
-package data
+package database
 
 import (
 	"database/sql"

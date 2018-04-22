@@ -1,7 +1,7 @@
 export GOPATH:=$(HOME)/.gopath:$(PWD)
 
 test:
-	@( clear && go vet src/*.go && go vet src/service/*.go && go vet src/data/*.go && cd test/unit && go test )
+	@( clear && go vet src/*.go && go vet src/service/*.go && go vet src/service/database/*.go && cd test/unit && go test )
 	@( golint src/... && golint test/... )
 
 build: 

@@ -8,9 +8,9 @@
 package unit
 
 import (
-	"data"
 	"fmt"
 	"service"
+	"service/database"
 	"testing"
 
 	. "github.com/franela/goblin"
@@ -23,17 +23,17 @@ func TestData(t *testing.T) {
 		log := service.CreateLogger()
 
 		g.It("should create a DOI struct", func() {
-			doi := data.DOI{}
+			doi := database.DOI{}
 			log.Info("%v", doi)
-			g.Assert(fmt.Sprintf("%T", doi)).Equal("data.DOI")
+			g.Assert(fmt.Sprintf("%T", doi)).Equal("database.DOI")
 			g.Assert(doi.ID).Equal("")
 			g.Assert(doi.Version).Equal(uint64(0))
 		})
 
 		g.It("should create a new populated DOI", func() {
-			doi := data.NewDOI()
+			doi := database.NewDOI()
 			log.Info("%v", doi)
-			g.Assert(fmt.Sprintf("%T", doi)).Equal("data.DOI")
+			g.Assert(fmt.Sprintf("%T", doi)).Equal("database.DOI")
 			g.Assert(len(doi.ID)).Equal(26)
 			g.Assert(doi.Version).Equal(uint64(0))
 		})
