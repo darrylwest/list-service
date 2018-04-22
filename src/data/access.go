@@ -34,11 +34,11 @@ func NewDOI() DOI {
 
 // DAO data access object
 type DAO struct {
-    Table string
+	Table string
 }
 
 // CreateQuery create a query string for the current dao
 func (dao DAO) CreateQuery(clause string) string {
-    stmt := ""
-    return stmt
+	stmt := ""
+	return stmt
 }

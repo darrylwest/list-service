@@ -7,6 +7,10 @@
 
 package data
 
+import (
+	"database/sql"
+)
+
 // User the user struct
 type User struct {
 	DOI
@@ -32,3 +36,13 @@ func NewUser(doi DOI, username string) User {
 
 // UserDao data access object for user
 type UserDao struct{}
+
+// Query
+func (u UserDao) Query(db *sql.DB, clause string) ([]User, error) {
+	var users []User
+	var err error
+
+	stmt := fmt.Sprintf("%s where %s", CreateSelect("users"), clause)
+
+	return users, err
+}
