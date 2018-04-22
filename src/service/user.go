@@ -5,7 +5,7 @@
 // @created 2018-04-22 12:50:14
 //
 
-package database
+package service
 
 import (
 	"database/sql"
@@ -47,7 +47,7 @@ func (dao UserDao) Query(db *sql.DB, clause string) ([]User, error) {
 
 	stmt := fmt.Sprintf("%s where %s", dao.CreateQuery("users"), clause)
 
-    fmt.Printf("stmt: %s\n", stmt)
+    log.Info("stmt: %s\n", stmt)
 
 	return users, err
 }
