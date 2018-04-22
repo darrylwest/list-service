@@ -9,27 +9,26 @@ package data
 
 // User the user struct
 type User struct {
-    DOI
-    Username string
-    Email string
-    SMS  string
-    Info string
-    Status string
+	DOI
+	Username string
+	Email    string
+	SMS      string
+	Info     string
+	Status   string
 }
 
 // NewUser creates a new user with the given DOI and username
 func NewUser(doi DOI, username string) User {
-    user := User{}
-    user.ID = doi.ID
-    user.DateCreated = doi.DateCreated
-    user.LastUpdated = doi.LastUpdated
-    user.Version = doi.Version
+	user := User{}
+	user.ID = doi.ID
+	user.DateCreated = doi.DateCreated
+	user.LastUpdated = doi.LastUpdated
+	user.Version = doi.Version
 
-    user.Username = username
+	user.Username = username
 
-    return user
+	return user
 }
 
 // UserDao data access object for user
-type UserDao struct { }
-
+type UserDao struct{}

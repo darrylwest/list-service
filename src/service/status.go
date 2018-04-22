@@ -35,7 +35,7 @@ func GetStatus(cfg *Config) Status {
 
 	s := Status{
 		PID:     os.Getpid(),
-		Service: "test-hub",
+		Service: "list-service",
 	}
 
 	s.Status = "ok"
