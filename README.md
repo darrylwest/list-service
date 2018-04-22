@@ -50,7 +50,6 @@ Internal requests use the following endpoints but are usually prefixed when expo
 * POST /list/      - insert a new list item; list data is posted as a json blob
 * PUT  /list/:id   - update the list item; list data is posted as a json blob
 * DEL  /list/:id   - remove the list item (or archive it)
-* PUT  /db/backup
 * GET  /status
 * GET  /logger
 * PUT  /logger/:n - set the log level 1..5

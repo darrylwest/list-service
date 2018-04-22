@@ -32,22 +32,8 @@ func NewService(cfg *Config) (*Service, error) {
 func (svc Service) Start() error {
 	log.Info("start the hub service...")
 
-	db, err := NewDatabase(svc.cfg)
-	if err != nil {
-		return err
-	}
-
-	if err = db.Open(); err != nil {
-		return err
-	}
-
-	defer db.Close()
-
-	// assign database to handler
-	svc.handlers.db = db
-
 	// start the listener
-	if err = svc.startServer(); err != nil {
+	if err := svc.startServer(); err != nil {
 		return err
 	}
 
@@ -65,7 +51,6 @@ func (svc Service) CreateRoutes() *bone.Mux {
 	router.GetFunc("/status", hnd.StatusHandler)
 	router.GetFunc("/logger", hnd.GetLogLevel)
 	router.PutFunc("/logger/:level", hnd.SetLogLevel)
-	router.PutFunc("/db/backup", hnd.DBBackupHandler)
 
 	// ok, now the list API...
 	router.GetFunc("/list/query", hnd.QueryHandler)

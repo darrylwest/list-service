@@ -22,7 +22,6 @@ var httpClientRequestTimeout = time.Duration(10 * time.Second)
 // Handlers the handlers struct for configuration
 type Handlers struct {
 	cfg *Config
-	db  DataAccessObject
 }
 
 // NewHandlers create the new handlers object
@@ -42,14 +41,9 @@ func (hnd Handlers) HomeHandler(w http.ResponseWriter, r *http.Request) {
 // QueryHandler - queries and returns list items
 func (hnd Handlers) QueryHandler(w http.ResponseWriter, r *http.Request) {
 	params := make(map[string]interface{})
-	items, err := QueryListItems(hnd.db, params)
-	if err != nil {
-		http.Error(w, "Query error", 400)
-		return
-	}
 
 	wrapper := hnd.CreateResponseWrapper("ok")
-	wrapper["items"] = items
+	wrapper["items"] = params
 
 	hnd.writeJSONBlob(w, wrapper)
 }
@@ -58,14 +52,8 @@ func (hnd Handlers) QueryHandler(w http.ResponseWriter, r *http.Request) {
 func (hnd Handlers) FindByIDHandler(w http.ResponseWriter, r *http.Request) {
 	id := bone.GetValue(r, "id")
 
-	item, err := GetListItem(hnd.db, id)
-	if err != nil {
-		http.Error(w, "Missing request body", 400)
-		return
-	}
-
 	wrapper := hnd.CreateResponseWrapper("ok")
-	wrapper["item"] = item
+	wrapper["item"] = id // should be item
 
 	hnd.writeJSONBlob(w, wrapper)
 }
@@ -85,18 +73,12 @@ func (hnd Handlers) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	item, err := ListItemFromJSON(data)
+	// item, err := ListItemFromJSON(data)
 
 	// todo -- fetch and compare to version...
 
-	item, err = item.Save(hnd.db)
-	if err != nil {
-		http.Error(w, "Request body has errors", 400)
-		return
-	}
-
 	wrapper := hnd.CreateResponseWrapper("ok")
-	wrapper["item"] = item
+	// wrapper["item"] = item
 
 	hnd.writeJSONBlob(w, wrapper)
 }
@@ -117,22 +99,12 @@ func (hnd Handlers) InsertHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	item, err := NewListItemFromJSON(data)
-	if err != nil {
-		log.Error("new item error: %s", err)
-		http.Error(w, "Post data parse failed: "+err.Error(), 400)
-		return
-	}
+	// item, err := NewListItemFromJSON(data)
 
-	item, err = item.Save(hnd.db)
-	if err != nil {
-		log.Error("save item error: %s", err)
-		http.Error(w, "Save data failed: "+err.Error(), 400)
-		return
-	}
+	// item, err = item.Save(hnd.db)
 
 	wrapper := hnd.CreateResponseWrapper("ok")
-	wrapper["item"] = item
+	// wrapper["item"] = item
 
 	hnd.writeJSONBlob(w, wrapper)
 }
@@ -147,30 +119,6 @@ func (hnd *Handlers) StatusHandler(w http.ResponseWriter, r *http.Request) {
 	blob := GetStatusAsJSON(hnd.cfg)
 
 	log.Info(blob)
-	fmt.Fprintf(w, "%s\n\r", blob)
-}
-
-// DBBackupHandler creates a backup of the current database
-func (hnd Handlers) DBBackupHandler(w http.ResponseWriter, r *http.Request) {
-	db := hnd.db
-
-	if db == nil {
-		log.Error("db backup failed, database not assigned")
-		hnd.writeErrorResponse(w, "database not assigned")
-		return
-	}
-
-	format := `{status":"%s","filename":"%s","errors":"%s"}`
-	var blob string
-
-	filename, err := db.Backup()
-	if err != nil {
-		log.Error("db backup failed, target: err: %s", err.Error())
-		blob = fmt.Sprintf(format, "failed", filename, err.Error())
-	} else {
-		blob = fmt.Sprintf(format, "ok", filename, "zero")
-	}
-
 	fmt.Fprintf(w, "%s\n\r", blob)
 }
 
