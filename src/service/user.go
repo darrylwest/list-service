@@ -9,7 +9,7 @@ package service
 
 import (
 	"database/sql"
-    "fmt"
+	"fmt"
 )
 
 // User the user struct
@@ -36,18 +36,18 @@ func NewUser(doi DOI, username string) User {
 }
 
 // UserDao data access object for user
-type UserDao struct{
-    DAO
+type UserDao struct {
+	DAO
 }
 
-// Query returns a slice of user objects 
+// Query returns a slice of user objects
 func (dao UserDao) Query(db *sql.DB, clause string) ([]User, error) {
 	var users []User
 	var err error
 
 	stmt := fmt.Sprintf("%s where %s", dao.CreateQuery("users"), clause)
 
-    log.Info("stmt: %s\n", stmt)
+	log.Info("stmt: %s\n", stmt)
 
 	return users, err
 }
