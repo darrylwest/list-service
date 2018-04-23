@@ -8,6 +8,8 @@
 package service
 
 import (
+    "database/sql"
+	"fmt"
 	"github.com/darrylwest/go-unique/unique"
 	"time"
 )
@@ -32,13 +34,34 @@ func NewDOI() DOI {
 	return doi
 }
 
+func CreateDatabase(db *sql.DB) error {
+    // stmt := "create dataase if not exists lists";
+
+    return nil
+}
+
 // DAO data access object
 type DAO struct {
-	Table string
+	Table  string
+	Select string
+}
+
+func (dao DAO) createDOIColumns() string {
+    stmt := "ID string primary key,\n\tDateCreated timestamp not null,\n\tLastUpdated timestamp not null,\n\tVersion int not null"
+
+    return stmt
+}
+
+func (dao DAO) createSelect() string {
+	return fmt.Sprintf("select * from %s", dao.Table)
 }
 
 // CreateQuery create a query string for the current dao
 func (dao DAO) CreateQuery(clause string) string {
-	stmt := ""
-	return stmt
+	return fmt.Sprintf("%s where %s", dao.Select, clause)
+}
+
+// CreateQuerySort create a query string with clause and sort/order by
+func (dao DAO) CreateQuerySort(clause, sortby string) string {
+    return fmt.Sprintf("%s order by %s", dao.CreateQuery(clause), sortby)
 }

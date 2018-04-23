@@ -40,6 +40,36 @@ type UserDao struct {
 	DAO
 }
 
+// NewUserDao create and return a new user dao
+func NewUserDao() UserDao {
+	dao := UserDao{}
+	dao.Table = "users"
+	dao.Select = dao.createSelect()
+
+	return dao
+}
+
+func (dao UserDao) createSchemaColumns() string {
+    stmt := `Username string not null,
+        Fullname string not null,
+        SMS string not null,
+        Email string not null,
+        Info jsonb,
+        Status string not null`
+
+    return stmt
+}
+
+// CreateSchema creates the table schema
+func (dao UserDao) CreateSchema() string {
+    stmt := `create table if not exists %s (
+        %s,
+        %s
+    )`
+
+    return fmt.Sprintf(stmt, dao.Table, dao.createDOIColumns(), dao.createSchemaColumns())
+}
+
 // Query returns a slice of user objects
 func (dao UserDao) Query(db *sql.DB, clause string) ([]User, error) {
 	var users []User
