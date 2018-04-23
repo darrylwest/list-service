@@ -50,24 +50,20 @@ func NewUserDao() UserDao {
 }
 
 func (dao UserDao) createSchemaColumns() string {
-    stmt := `Username string not null,
-        Fullname string not null,
+	stmt := `Username string not null unique,
         SMS string not null,
         Email string not null,
-        Info jsonb,
+        Info jsonb not null,
         Status string not null`
 
-    return stmt
+	return stmt
 }
 
 // CreateSchema creates the table schema
 func (dao UserDao) CreateSchema() string {
-    stmt := `create table if not exists %s (
-        %s,
-        %s
-    )`
+	stmt := dao.createSchemaStatement()
 
-    return fmt.Sprintf(stmt, dao.Table, dao.createDOIColumns(), dao.createSchemaColumns())
+	return fmt.Sprintf(stmt, dao.Table, dao.createDOIColumns(), dao.createSchemaColumns())
 }
 
 // Query returns a slice of user objects

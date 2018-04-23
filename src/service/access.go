@@ -8,7 +8,7 @@
 package service
 
 import (
-    "database/sql"
+	"database/sql"
 	"fmt"
 	"github.com/darrylwest/go-unique/unique"
 	"time"
@@ -35,9 +35,9 @@ func NewDOI() DOI {
 }
 
 func CreateDatabase(db *sql.DB) error {
-    // stmt := "create dataase if not exists lists";
+	// stmt := "create dataase if not exists lists";
 
-    return nil
+	return nil
 }
 
 // DAO data access object
@@ -46,10 +46,17 @@ type DAO struct {
 	Select string
 }
 
-func (dao DAO) createDOIColumns() string {
-    stmt := "ID string primary key,\n\tDateCreated timestamp not null,\n\tLastUpdated timestamp not null,\n\tVersion int not null"
+func (dao DAO) createSchemaStatement() string {
+	return `create table if not exists %s (
+        %s,
+        %s
+    )`
+}
 
-    return stmt
+func (dao DAO) createDOIColumns() string {
+	stmt := "ID string primary key,\n\tDateCreated timestamp not null,\n\tLastUpdated timestamp not null,\n\tVersion int not null"
+
+	return stmt
 }
 
 func (dao DAO) createSelect() string {
@@ -63,5 +70,5 @@ func (dao DAO) CreateQuery(clause string) string {
 
 // CreateQuerySort create a query string with clause and sort/order by
 func (dao DAO) CreateQuerySort(clause, sortby string) string {
-    return fmt.Sprintf("%s order by %s", dao.CreateQuery(clause), sortby)
+	return fmt.Sprintf("%s order by %s", dao.CreateQuery(clause), sortby)
 }

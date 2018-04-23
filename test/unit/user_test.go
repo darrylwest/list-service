@@ -19,7 +19,7 @@ func TestUser(t *testing.T) {
 	g := Goblin(t)
 
 	log := service.CreateLogger()
-    log.SetLevel(2)
+	log.SetLevel(2)
 
 	g.Describe("User", func() {
 
@@ -65,25 +65,25 @@ func TestUser(t *testing.T) {
 		})
 
 		g.It("should create a user table", func() {
-            stmt := dao.CreateSchema()
-            g.Assert(stmt != "").IsTrue()
-            log.Info("%s", stmt)
-        })
+			stmt := dao.CreateSchema()
+			g.Assert(stmt != "").IsTrue()
+			log.Info("%s", stmt)
+		})
 
 		g.It("should create a query statement", func() {
 			stmt := dao.CreateQuery("status='active'")
 			g.Assert(stmt).Equal("select * from users where status='active'")
 		})
 
-        g.It("should create a query with sort", func() {
-            stmt := dao.CreateQuerySort("status='active'", "LastUpdated")
-            g.Assert(stmt).Equal("select * from users where status='active' order by LastUpdated")
-        })
+		g.It("should create a query with sort", func() {
+			stmt := dao.CreateQuerySort("status='active'", "LastUpdated")
+			g.Assert(stmt).Equal("select * from users where status='active' order by LastUpdated")
+		})
 
-        g.It("should create the user schema", func() {
-            stmt := dao.CreateSchema()
-            g.Assert(stmt != "").IsTrue()
-        })
+		g.It("should create the user schema", func() {
+			stmt := dao.CreateSchema()
+			g.Assert(stmt != "").IsTrue()
+		})
 	})
 
 }
