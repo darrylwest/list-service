@@ -46,6 +46,7 @@ type DAO struct {
 	Select string
 }
 
+// create the basic schema template for DOI and custom columns
 func (dao DAO) createSchemaStatement() string {
 	return `create table if not exists %s (
         %s,
