@@ -85,5 +85,4 @@ func TestUser(t *testing.T) {
 			g.Assert(stmt != "").IsTrue()
 		})
 	})
-
 }

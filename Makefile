@@ -1,3 +1,4 @@
+.SILENT:
 export GOPATH:=$(HOME)/.gopath:$(PWD)
 
 test:

@@ -34,6 +34,7 @@ func NewDOI() DOI {
 	return doi
 }
 
+// CreateDatabase creates the standard database
 func CreateDatabase(db *sql.DB) error {
 	// stmt := "create dataase if not exists lists";
 

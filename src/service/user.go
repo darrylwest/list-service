@@ -40,6 +40,16 @@ type UserDao struct {
 	DAO
 }
 
+func (dao UserDao) createSchemaColumns() string {
+	stmt := `Username string not null unique,
+        Email string not null,
+        SMS string not null,
+        Info jsonb not null,
+        Status string not null`
+
+	return stmt
+}
+
 // NewUserDao create and return a new user dao
 func NewUserDao() UserDao {
 	dao := UserDao{}
@@ -49,15 +59,6 @@ func NewUserDao() UserDao {
 	return dao
 }
 
-func (dao UserDao) createSchemaColumns() string {
-	stmt := `Username string not null unique,
-        SMS string not null,
-        Email string not null,
-        Info jsonb not null,
-        Status string not null`
-
-	return stmt
-}
 
 // CreateSchema creates the table schema
 func (dao UserDao) CreateSchema() string {
