@@ -59,7 +59,6 @@ func NewUserDao() UserDao {
 	return dao
 }
 
-
 // CreateSchema creates the table schema
 func (dao UserDao) CreateSchema() string {
 	stmt := dao.createSchemaStatement()
