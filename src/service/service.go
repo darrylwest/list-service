@@ -28,6 +28,13 @@ func NewService(cfg *Config) (*Service, error) {
 	return &svc, nil
 }
 
+// StartDatabase create the db, tables, load data
+func (svc Service) StartDatabase() error {
+    log.Info("start the database...")
+
+    return nil
+}
+
 // Start start the admin listener and event loop
 func (svc Service) Start() error {
 	log.Info("start the hub service...")

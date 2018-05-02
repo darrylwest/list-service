@@ -9,7 +9,7 @@ package main
 import "service"
 
 func main() {
-	service.CreateLogger()
+	log := service.CreateLogger()
 	cfg := service.ParseArgs()
 	if cfg == nil {
 		service.ShowHelp()
@@ -20,6 +20,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+    service.
 
 	err = service.Start()
 	if err != nil {
