@@ -7,7 +7,7 @@ test:
 
 build: 
 	@[ -d bin ] || mkdir bin
-	go build -o bin/list-service src/main.go
+	packr build -o bin/list-service src/main.go
 
 install-deps:
 	go get github.com/golang/lint/golint
@@ -29,7 +29,7 @@ lint:
 	@( golint src/... && golint test/... )
 
 run:
-	go run src/main.go --port 9040
+	packr build -o bin/list-service src/main.go && ./bin/list-service --port 9040
 
 watch:
 	go-watcher --loglevel=4
