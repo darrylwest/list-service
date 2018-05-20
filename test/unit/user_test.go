@@ -9,7 +9,7 @@ package unit
 
 import (
 	"fmt"
-	"service"
+	"app"
 	"testing"
 
 	. "github.com/franela/goblin"
@@ -18,15 +18,15 @@ import (
 func TestUser(t *testing.T) {
 	g := Goblin(t)
 
-	log := service.CreateLogger()
+	log := app.CreateLogger()
 	log.SetLevel(2)
 
 	g.Describe("User", func() {
 
 		g.It("should create a User struct", func() {
-			user := service.User{}
+			user := app.User{}
 			log.Info("%v", user)
-			g.Assert(fmt.Sprintf("%T", user)).Equal("service.User")
+			g.Assert(fmt.Sprintf("%T", user)).Equal("app.User")
 			g.Assert(user.ID).Equal("")
 			g.Assert(user.Version).Equal(uint64(0))
 			g.Assert(user.Username).Equal("")
@@ -37,13 +37,13 @@ func TestUser(t *testing.T) {
 		})
 
 		g.It("should create a new populated DOI", func() {
-			doi := service.NewDOI()
+			doi := app.NewDOI()
 			name := "fredv"
 
-			user := service.NewUser(doi, name)
+			user := app.NewUser(doi, name)
 			log.Info("%v", user)
 
-			g.Assert(fmt.Sprintf("%T", user)).Equal("service.User")
+			g.Assert(fmt.Sprintf("%T", user)).Equal("app.User")
 			g.Assert(user.ID).Equal(doi.ID)
 			g.Assert(user.DateCreated).Equal(doi.DateCreated)
 			g.Assert(user.LastUpdated).Equal(doi.LastUpdated)
@@ -57,10 +57,10 @@ func TestUser(t *testing.T) {
 	})
 
 	g.Describe("UserDao", func() {
-		dao := service.NewUserDao()
+		dao := app.NewUserDao()
 
 		g.It("should create a user dao", func() {
-			g.Assert(fmt.Sprintf("%T", dao)).Equal("service.UserDao")
+			g.Assert(fmt.Sprintf("%T", dao)).Equal("app.UserDao")
 			g.Assert(dao.Table).Equal("users")
 		})
 

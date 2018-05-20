@@ -3,7 +3,7 @@
 // @author darryl.west@eaby.com
 // @created 2017-08-16 10:57:53
 
-package service
+package app
 
 import (
 	"fmt"

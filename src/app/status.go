@@ -5,7 +5,7 @@
 // @created 2017-07-27 11:37:13
 //
 
-package service
+package app
 
 import (
 	"encoding/json"

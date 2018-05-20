@@ -3,7 +3,7 @@
 // @author darryl.west@ebay.com
 // @created 2018-01-15 09:59:37
 
-package service
+package app
 
 import "fmt"
 

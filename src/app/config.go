@@ -4,7 +4,7 @@
 // @author darryl.west <darryl.west@ebay.com>
 // @created 2018-01-17 17:56:46
 
-package service
+package app
 
 import (
 	"flag"

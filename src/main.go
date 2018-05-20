@@ -6,23 +6,22 @@
 
 package main
 
-import "service"
+import "app"
 
 func main() {
-	log := service.CreateLogger()
-	cfg := service.ParseArgs()
+	log := app.CreateLogger()
+	cfg := app.ParseArgs()
 	if cfg == nil {
-		service.ShowHelp()
+		app.ShowHelp()
 		return
 	}
 
-	service, err := service.NewService(cfg)
+	service, err := app.NewService(cfg)
 	if err != nil {
 		panic(err)
 	}
 
-	service.
-		err = service.Start()
+    err = service.Start()
 	if err != nil {
 		println(err.Error())
 	}
