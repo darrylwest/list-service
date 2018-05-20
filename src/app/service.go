@@ -72,7 +72,6 @@ func (svc Service) CreateRoutes() *bone.Mux {
 
 func (svc Service) startServer() error {
 
-    hnd := svc.handlers
 	cfg := svc.cfg
 
     router := svc.CreateRoutes()

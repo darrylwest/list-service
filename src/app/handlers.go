@@ -45,7 +45,7 @@ func (hnd Handlers) HomeHandler() http.HandlerFunc {
     }
 
     index := IndexPage{
-        PageTitle: "List Service",
+        PageTitle: "list service",
         Logo:      appLogo(),
         Version:   Version(),
     }
