@@ -90,7 +90,7 @@ func (hnd Handlers) FileHandler() http.HandlerFunc {
         } else if strings.HasSuffix(path, ".js") {
             w.Header().Set("Content-Type", "plain/javascript")
         } else if strings.HasSuffix(path, ".ico") {
-            w.Header().Set("Content-Type", "image/ico")
+            w.Header().Set("Content-Type", "image/x-icon")
         }
 
         log.Info("send page bytes: %d", len(page))
