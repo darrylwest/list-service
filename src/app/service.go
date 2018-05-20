@@ -54,7 +54,7 @@ func (svc Service) CreateRoutes() *bone.Mux {
 	hnd := svc.handlers
 
 	router := bone.New()
-    router.GetFunc("/", hnd.HomeHandler())
+	router.GetFunc("/", hnd.HomeHandler())
 
 	router.GetFunc("/api/status", hnd.StatusHandler)
 	router.GetFunc("/api/logger", hnd.GetLogLevel)
@@ -74,7 +74,7 @@ func (svc Service) startServer() error {
 
 	cfg := svc.cfg
 
-    router := svc.CreateRoutes()
+	router := svc.CreateRoutes()
 
 	host := fmt.Sprintf(":%d", cfg.Port)
 	log.Info("start listening on port %s", host)

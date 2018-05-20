@@ -19,5 +19,5 @@ func Version() string {
 }
 
 func appLogo() string {
-    return "List Service"
+	return "List Service"
 }

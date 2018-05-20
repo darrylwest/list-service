@@ -8,10 +8,10 @@
 package app
 
 import (
-    "bytes"
+	"bytes"
 	"encoding/json"
 	"fmt"
-    "html/template"
+	"html/template"
 	"net/http"
 	"strconv"
 	"time"
@@ -38,50 +38,50 @@ func NewHandlers(cfg *Config) *Handlers {
 func (hnd Handlers) HomeHandler() http.HandlerFunc {
 	log.Info("read and serve the index page...")
 
-    type IndexPage struct {
-        PageTitle string
-        Logo      string
-        Version   string
-    }
+	type IndexPage struct {
+		PageTitle string
+		Logo      string
+		Version   string
+	}
 
-    index := IndexPage{
-        PageTitle: "list service",
-        Logo:      appLogo(),
-        Version:   Version(),
-    }
+	index := IndexPage{
+		PageTitle: "list service",
+		Logo:      appLogo(),
+		Version:   Version(),
+	}
 
-    text := hnd.ReadIndexTemplate()
+	text := hnd.ReadIndexTemplate()
 
-    t, err := template.New("index").Parse(text)
-    if err != nil {
-        log.Error("template parse error: %s", err)
-    }
+	t, err := template.New("index").Parse(text)
+	if err != nil {
+		log.Error("template parse error: %s", err)
+	}
 
-    return func(w http.ResponseWriter, r *http.Request) {
-        var data bytes.Buffer
-        err = t.Execute(&data, index)
-        if err != nil {
-            log.Error("error executing template: %s", err)
-        }
+	return func(w http.ResponseWriter, r *http.Request) {
+		var data bytes.Buffer
+		err = t.Execute(&data, index)
+		if err != nil {
+			log.Error("error executing template: %s", err)
+		}
 
-        log.Info("show the home page: %d bytes", data.Len())
-        if n, err := data.WriteTo(w); err != nil {
-            log.Error("home page bytes written: %d, error: %s", n, err)
-        }
-    }
+		log.Info("show the home page: %d bytes", data.Len())
+		if n, err := data.WriteTo(w); err != nil {
+			log.Error("home page bytes written: %d, error: %s", n, err)
+		}
+	}
 }
 
 // ReadIndexTemplate reads the index file and returns the text string
 func (hnd Handlers) ReadIndexTemplate() string {
-    box := hnd.cfg.Box
+	box := hnd.cfg.Box
 
-    page, err := box.MustString("/index.html")
-    if err != nil {
-        log.Error("error reading index : %v", err)
-        panic(err)
-    }
+	page, err := box.MustString("/index.html")
+	if err != nil {
+		log.Error("error reading index : %v", err)
+		panic(err)
+	}
 
-    return page
+	return page
 }
 
 // QueryHandler - queries and returns list items
