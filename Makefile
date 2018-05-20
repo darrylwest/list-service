@@ -28,7 +28,7 @@ lint:
 	@( golint src/... && golint test/... )
 
 run:
-	go run src/main.go --db-filename ~/database/list-service.db --port 9040
+	go run src/main.go --port 9040
 
 watch:
 	go-watcher --loglevel=4

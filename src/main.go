@@ -21,7 +21,8 @@ func main() {
 		panic(err)
 	}
 
-    err = service.Start()
+	log.Info("start the service...")
+	err = service.Start()
 	if err != nil {
 		println(err.Error())
 	}
