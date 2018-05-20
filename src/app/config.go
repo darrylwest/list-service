@@ -11,12 +11,14 @@ import (
 	"fmt"
 	"os"
 	"path"
+    "github.com/gobuffalo/packr"
 )
 
 // Config the config structure
 type Config struct {
 	Port     int
 	LogLevel int
+    Box      packr.Box
 }
 
 // NewDefaultConfig default settings
@@ -25,6 +27,8 @@ func NewDefaultConfig() *Config {
 
 	cfg.Port = 80
 	cfg.LogLevel = 2
+    
+    cfg.Box = packr.NewBox("../../public-html")
 
 	return cfg
 }
@@ -56,6 +60,7 @@ func ParseArgs() *Config {
 	cfg := Config{
 		Port:     *port,
 		LogLevel: *level,
+        Box:      dflt.Box,
 	}
 
 	log.SetLevel(cfg.LogLevel)

@@ -8,10 +8,13 @@
 package app
 
 import (
+    "bytes"
 	"encoding/json"
 	"fmt"
+    "html/template"
 	"net/http"
 	"strconv"
+    "strings"
 	"time"
 
 	"github.com/go-zoo/bone"
@@ -33,9 +36,80 @@ func NewHandlers(cfg *Config) *Handlers {
 }
 
 // HomeHandler read templates; compile and return the home page
-func (hnd Handlers) HomeHandler(w http.ResponseWriter, r *http.Request) {
-	// read and serve the index page...
-	hnd.StatusHandler(w, r)
+func (hnd Handlers) HomeHandler() http.HandlerFunc {
+	log.Info("read and serve the index page...")
+
+    type IndexPage struct {
+        PageTitle string
+        Logo      string
+        Version   string
+    }
+
+    index := IndexPage{
+        PageTitle: "List Service",
+        Logo:      appLogo(),
+        Version:   Version(),
+    }
+
+    text := hnd.ReadIndexTemplate()
+
+    t, err := template.New("index").Parse(text)
+    if err != nil {
+        log.Error("template parse error: %s", err)
+    }
+
+    return func(w http.ResponseWriter, r *http.Request) {
+        var data bytes.Buffer
+        err = t.Execute(&data, index)
+        if err != nil {
+            log.Error("error executing template: %s", err)
+        }
+
+        log.Info("show the home page: %d bytes", data.Len())
+        if n, err := data.WriteTo(w); err != nil {
+            log.Error("home page bytes written: %d, error: %s", n, err)
+        }
+    }
+}
+
+// FileHandler reads the public static file and returns
+func (hnd Handlers) FileHandler() http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        path := r.URL.Path
+        log.Info("document request: %s", path)
+        box := hnd.cfg.Box
+        page, err := box.MustBytes(path)
+        if err != nil {
+            log.Error("error reading page: %s : %s", path, err)
+            http.Error(w, path + " not found", 404)
+            return
+        }
+
+        if strings.HasSuffix(path, ".css") {
+            w.Header().Set("Content-Type", "plain/css")
+        } else if strings.HasSuffix(path, ".js") {
+            w.Header().Set("Content-Type", "plain/javascript")
+        } else if strings.HasSuffix(path, ".ico") {
+            w.Header().Set("Content-Type", "image/ico")
+        }
+
+        log.Info("send page bytes: %d", len(page))
+        w.WriteHeader(http.StatusOK)
+        w.Write(page);
+    }
+}
+
+// ReadIndexTemplate reads the index file and returns the text string
+func (hnd Handlers) ReadIndexTemplate() string {
+    box := hnd.cfg.Box
+
+    page, err := box.MustString("/index.html")
+    if err != nil {
+        log.Error("error reading index : %v", err)
+        panic(err)
+    }
+
+    return page
 }
 
 // QueryHandler - queries and returns list items

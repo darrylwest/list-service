@@ -54,7 +54,10 @@ func (svc Service) CreateRoutes() *bone.Mux {
 	hnd := svc.handlers
 
 	router := bone.New()
-	router.GetFunc("/", hnd.HomeHandler)
+	router.GetFunc("/", hnd.HomeHandler())
+    router.GetFunc("/favicon.ico", hnd.FileHandler())
+    router.GetFunc("/dist/", hnd.FileHandler())
+
 	router.GetFunc("/status", hnd.StatusHandler)
 	router.GetFunc("/logger", hnd.GetLogLevel)
 	router.PutFunc("/logger/:level", hnd.SetLogLevel)

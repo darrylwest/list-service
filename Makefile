@@ -10,11 +10,12 @@ build:
 	go build -o bin/list-service src/main.go
 
 install-deps:
-	go get github.com/go-zoo/bone
 	go get github.com/golang/lint/golint
 	go get github.com/franela/goblin
 	go get github.com/darrylwest/go-unique/unique
-	go get -u github.com/darrylwest/cassava-logger/logger
+	go get github.com/darrylwest/cassava-logger/logger
+	go get github.com/go-zoo/bone
+	go get github.com/gobuffalo/packr
 	go get github.com/lib/pq
 
 linux:

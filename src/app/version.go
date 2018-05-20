@@ -17,3 +17,7 @@ const (
 func Version() string {
 	return fmt.Sprintf("%d.%d.%d", major, minor, patch)
 }
+
+func appLogo() string {
+    return "List Service"
+}
