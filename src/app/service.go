@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"net/http"
 
-	// "github.com/go-zoo/bone"
+	"github.com/go-zoo/bone"
 )
 
 // Service - the service struct
@@ -47,44 +47,40 @@ func (svc Service) Start() error {
 	return nil
 }
 
-/*
 // CreateRoutes creates an http router and attaches the handlers
-func (svc Service) CreateRoutes() *http.ServerMux {
+func (svc Service) CreateRoutes() *bone.Mux {
 	log.Info("configure the router/handler routes...")
 
 	hnd := svc.handlers
 
-	mux := 
+	router := bone.New()
+    router.GetFunc("/", hnd.HomeHandler())
 
 	router.GetFunc("/api/status", hnd.StatusHandler)
 	router.GetFunc("/api/logger", hnd.GetLogLevel)
 	router.PutFunc("/api/logger/:level", hnd.SetLogLevel)
 
 	// ok, now the list API...
-	router.GetFunc("/list/query", hnd.QueryHandler)
-	router.GetFunc("/list/:id", hnd.FindByIDHandler)
-	router.PostFunc("/list", hnd.InsertHandler)
-	router.PutFunc("/list/:id", hnd.UpdateHandler)
-	router.DeleteFunc("/list/:id", hnd.DeleteHandler)
+	router.GetFunc("/api/list/query", hnd.QueryHandler)
+	router.GetFunc("/api/list/:id", hnd.FindByIDHandler)
+	router.PostFunc("/api/list", hnd.InsertHandler)
+	router.PutFunc("/api/list/:id", hnd.UpdateHandler)
+	router.DeleteFunc("/api/list/:id", hnd.DeleteHandler)
 
 	return router
 }
-*/
 
 func (svc Service) startServer() error {
 
     hnd := svc.handlers
 	cfg := svc.cfg
 
-    http.Handle("/", http.FileServer(cfg.Box))
-
-	http.HandleFunc("/api/status", hnd.StatusHandler)
-	http.HandleFunc("/api/logger", hnd.GetLogLevel)
+    router := svc.CreateRoutes()
 
 	host := fmt.Sprintf(":%d", cfg.Port)
 	log.Info("start listening on port %s", host)
 
-	err := http.ListenAndServe(host, nil)
+	err := http.ListenAndServe(host, router)
 	if err != nil {
 		log.Error("http error: %s", err)
 		return err

@@ -14,7 +14,6 @@ import (
     "html/template"
 	"net/http"
 	"strconv"
-    "strings"
 	"time"
 
 	"github.com/go-zoo/bone"
@@ -69,33 +68,6 @@ func (hnd Handlers) HomeHandler() http.HandlerFunc {
         if n, err := data.WriteTo(w); err != nil {
             log.Error("home page bytes written: %d, error: %s", n, err)
         }
-    }
-}
-
-// FileHandler reads the public static file and returns
-func (hnd Handlers) FileHandler() http.HandlerFunc {
-    return func(w http.ResponseWriter, r *http.Request) {
-        path := r.URL.Path
-        log.Info("document request: %s", path)
-        box := hnd.cfg.Box
-        page, err := box.MustBytes(path)
-        if err != nil {
-            log.Error("error reading page: %s : %s", path, err)
-            http.Error(w, path + " not found", 404)
-            return
-        }
-
-        if strings.HasSuffix(path, ".css") {
-            w.Header().Set("Content-Type", "plain/css")
-        } else if strings.HasSuffix(path, ".js") {
-            w.Header().Set("Content-Type", "plain/javascript")
-        } else if strings.HasSuffix(path, ".ico") {
-            w.Header().Set("Content-Type", "image/x-icon")
-        }
-
-        log.Info("send page bytes: %d", len(page))
-        w.WriteHeader(http.StatusOK)
-        w.Write(page);
     }
 }
 
