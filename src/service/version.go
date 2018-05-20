@@ -9,8 +9,8 @@ import "fmt"
 
 const (
 	major = 18
-	minor = 4
-	patch = 22
+	minor = 5
+	patch = 20
 )
 
 // Version - return the version number as a single string
