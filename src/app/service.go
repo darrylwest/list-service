@@ -56,9 +56,9 @@ func (svc Service) CreateRoutes() *bone.Mux {
 	router := bone.New()
 	router.GetFunc("/", hnd.HomeHandler())
 
-	router.GetFunc("/api/status", hnd.StatusHandler)
-	router.GetFunc("/api/logger", hnd.GetLogLevel)
-	router.PutFunc("/api/logger/:level", hnd.SetLogLevel)
+	router.GetFunc("/api/list/status", hnd.StatusHandler)
+	router.GetFunc("/api/list/logger", hnd.GetLogLevel)
+	router.PutFunc("/api/list/logger/:level", hnd.SetLogLevel)
 
 	// ok, now the list API...
 	router.GetFunc("/api/list/query", hnd.QueryHandler)
