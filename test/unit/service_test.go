@@ -29,15 +29,7 @@ func TestService(t *testing.T) {
 			g.Assert(fmt.Sprintf("%T", service)).Equal("*app.Service")
 		})
 
-		g.It("should initialize the router", func() {
-			service, err := app.NewService(cfg)
-			g.Assert(err).Equal(nil)
-
-			router := service.CreateRoutes()
-
-			log.Debug("router: %v", router)
-
-		})
+		g.It("should initialize the router")
 
 	})
 }
