@@ -15,7 +15,7 @@ install-deps:
 	go get github.com/darrylwest/go-unique/unique
 	go get github.com/darrylwest/cassava-logger/logger
 	go get github.com/go-zoo/bone
-	go get github.com/gobuffalo/packr
+	go get -u github.com/gobuffalo/packr/...
 	go get github.com/lib/pq
 
 linux:
@@ -30,6 +30,9 @@ lint:
 
 run:
 	packr build -o bin/list-service src/main.go && ./bin/list-service --port 9040
+
+status:
+	curl http://localhost:9040/api/list/status
 
 watch:
 	go-watcher --loglevel=4
