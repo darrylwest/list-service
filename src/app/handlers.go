@@ -88,6 +88,8 @@ func (hnd Handlers) ReadIndexTemplate() string {
 func (hnd Handlers) QueryHandler(w http.ResponseWriter, r *http.Request) {
 	params := make(map[string]interface{})
 
+	// TODO : validate and execute the query
+
 	wrapper := hnd.CreateResponseWrapper("ok")
 	wrapper["items"] = params
 
@@ -97,6 +99,8 @@ func (hnd Handlers) QueryHandler(w http.ResponseWriter, r *http.Request) {
 // FindByIDHandler - queries and returns list items
 func (hnd Handlers) FindByIDHandler(w http.ResponseWriter, r *http.Request) {
 	id := bone.GetValue(r, "id")
+
+	// TODO : query by id
 
 	wrapper := hnd.CreateResponseWrapper("ok")
 	wrapper["item"] = id // should be item
@@ -121,7 +125,7 @@ func (hnd Handlers) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 	// item, err := ListItemFromJSON(data)
 
-	// todo -- fetch and compare to version...
+	// TODO : fetch and compare to version...
 
 	wrapper := hnd.CreateResponseWrapper("ok")
 	// wrapper["item"] = item

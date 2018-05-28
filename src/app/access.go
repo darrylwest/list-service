@@ -1,5 +1,5 @@
 //
-// access
+// access - SQL database definitions and access methods.
 //
 // @author darryl.west@ebay.com
 // @created 2018-01-17 12:57:59
