@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-var started = time.Now().Unix()
+var InstanceStartTime = time.Now().Unix()
 
 // Status - the standard status struct
 type Status struct {
@@ -27,6 +27,7 @@ type Status struct {
 	TimeStamp int64  `json:"ts"`
 	UpTime    int64  `json:"uptime-seconds"`
 	LogLevel  int    `json:"loglevel"`
+    Hostname  string `json:"hostname"`
 }
 
 // GetStatus return the current status struct
@@ -43,8 +44,12 @@ func GetStatus(cfg *Config) Status {
 	s.CPUs = runtime.NumCPU()
 	s.GoVers = runtime.Version()
 	s.TimeStamp = now
-	s.UpTime = now - started
+	s.UpTime = now - InstanceStartTime
 	s.LogLevel = log.GetLevel()
+
+    if host, err := os.Hostname(); err == nil {
+        s.Hostname = host
+    }
 
 	return s
 }
