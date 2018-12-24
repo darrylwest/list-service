@@ -91,5 +91,5 @@ user schema
 
 Using packr.Box to deliver files works if you combine all the html, css, javascript, and images into a single file.  This is ok for small applications, but when multiple pages are required, it could quickly get out of hand.  I suspect that a larger application wouldn't require packr and could combine bone with a static file listener for the best combination.
 
-###### darryl.west | 2018.12.24
+###### darryl.west | 2018.12.25
 

@@ -6,10 +6,14 @@ help:
 	@( echo "" && echo "Makefile targets..." && echo "" )
 	@( cat Makefile | grep '^##' | sed -e 's/##/ -/' | sort && echo "" )
 
-## test: run project unit tests
+## test: run project unit tests including lint
 test:
 	@( clear && go vet src/*.go && go vet src/app/*.go && cd test/unit && go test )
 	@( golint src/... && golint test/... )
+
+## qtest: run project unit tests without lint
+qtest:
+	@( clear && go vet src/*.go && go vet src/app/*.go && cd test/unit && go test )
 
 ## build: compile the project
 build: 
