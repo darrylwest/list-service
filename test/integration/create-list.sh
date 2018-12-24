@@ -38,7 +38,7 @@ yogurt
 zucchini
 '
 
-host="http://localhost:9040"
+host="http://localhost:9040/api"
 
 for item in $list
 do

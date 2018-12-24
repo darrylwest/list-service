@@ -27,7 +27,7 @@ type Status struct {
 	TimeStamp int64  `json:"ts"`
 	UpTime    int64  `json:"uptime-seconds"`
 	LogLevel  int    `json:"loglevel"`
-    Hostname  string `json:"hostname"`
+	Hostname  string `json:"hostname"`
 }
 
 // GetStatus return the current status struct
@@ -47,9 +47,9 @@ func GetStatus(cfg *Config) Status {
 	s.UpTime = now - InstanceStartTime
 	s.LogLevel = log.GetLevel()
 
-    if host, err := os.Hostname(); err == nil {
-        s.Hostname = host
-    }
+	if host, err := os.Hostname(); err == nil {
+		s.Hostname = host
+	}
 
 	return s
 }

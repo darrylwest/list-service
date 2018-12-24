@@ -1,7 +1,6 @@
 sudo: false
 language: go
 go:
-  - 1.9.x
   - 1.11.x
 
 install:
@@ -12,5 +11,5 @@ branches:
     - master
 
 script:
-  - make qtest
+  - make test
 
