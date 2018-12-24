@@ -11,7 +11,7 @@
 
 ## Overview
 
-A generic list service used for todo, grocery, menus, etc.  The target design is for the application to run inside a container with a single purpose, i.e., a single list type.  
+A generic list service used for todo, grocery, food menus, etc.  The target design is for the application to run inside a container with a single purpose, i.e., a single list type.  
 
 
 ## Block Diagram
@@ -22,36 +22,39 @@ The test controller includes an http REST interface to respond to end point requ
                       ... Docker Container Environment ...
 
        Edge Proxy
-      +------------+          List Service-1
+      +------------+          List Service
       |            |         +---------------+
-      |            |-------->| http/rest     |
-      |            |<--------|               |                     +------+
-      | http/rest  |         +---------------+  List Service-2     |  db1 |
-      |            |                           +--------------+    +------+
-      |            |-------------------------->| http/rest    |    +------+
-      |            |<--------------------------|              |    | db2  |
-      |            |          List Service-3   +--------------+    +------+
-      |            |         +--------------+                      +------+
-      |            |-------->| http/rest    |                      | db3  |
-      |            |<--------|              |                      +------+
+      |            |-------->| http/rest     |<-----------------------+
+      |            |<--------|               |                        |
+      | http/rest  |         +---------------+  List Service          |
+      |            |                           +--------------+       |
+      |            |-------------------------->| http/rest    |    +-------+
+      |            |<--------------------------|              |<-->| db    |
+      |            |          List Service     +--------------+    +-------+
+      |            |         +--------------+                         |
+      |            |-------->| http/rest    |<------------------------+
+      |            |<--------|              |
       |            |         +--------------+
       +------------+         
 ```
+
+_The "db" is to be determined but probably elasticsearch or redis..._
 
 ## Rest API
 
 ### Proxy Prefix
 
-Internal requests use the following endpoints but are usually prefixed when exposed to the web. Prefixes are specific to the list type, so a ToDo list may have a prefix of `/todoapi` to distinguesh from a `/shopapi`. The proxy strips this prefix off prior to forwarding the request, so the following API is unchanged across various implementations.
+Internal requests use the following endpoints but are usually prefixed when exposed to the web. Prefixes are specific to the list type, so a ToDo list may have a prefix of `/foodapi/v1` to distinguesh from a `/shopapi/v1`.  The proxy strips this prefix off prior to forwarding the request, so the following API is unchanged across various implementations.
 
-* GET  /           - return the html home page
 * GET  /list/query - return zero or more items from the list based on query parameters
 * GET  /list/:id   - return the list item by id
 * POST /list/      - insert a new list item; list data is posted as a json blob
 * PUT  /list/:id   - update the list item; list data is posted as a json blob
 * DEL  /list/:id   - remove the list item (or archive it)
-* GET  /status
-* GET  /logger
+
+* GET  /           - return the api lists
+* GET  /status     - server this container's status
+* GET  /logger     - current log level for current container
 * PUT  /logger/:n - set the log level 1..5
 
 ## Document Dataset
