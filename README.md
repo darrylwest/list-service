@@ -9,6 +9,8 @@
                                                         
 ```
 
+[![build](https://travis-ci.org/darrylwest/list-service.svg?branch=master)](https://travis-ci.org/darrylwest/list-service/)
+
 ## Overview
 
 A generic list service used for todo, grocery, menus, etc.  The target design is for the application to run inside a container with a single purpose, i.e., a single list type.  
